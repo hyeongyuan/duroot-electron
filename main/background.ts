@@ -3,7 +3,8 @@ import { app, ipcMain } from 'electron'
 import serve from 'electron-serve'
 import { createTray, createWindow } from './helpers'
 
-const isProd = process.env.NODE_ENV === 'production'
+const isProd = process.env.NODE_ENV === 'production';
+const isMac = process.platform === 'darwin';
 
 if (isProd) {
   serve({ directory: 'app' })
@@ -16,13 +17,29 @@ if (isProd) {
 
   const tray = createTray();
 
+  if (isMac) {
+    app.dock.hide();
+  }
   const mainWindow = createWindow('main', {
-    width: 1000,
-    height: 600,
+    width: 400,
+    height: 500,
+    show: false,
     frame: false,
+    fullscreenable: false,
+    resizable: false,
+    transparent: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
+  });
+
+  mainWindow.setAlwaysOnTop(true, 'screen-saver');
+  mainWindow.setVisibleOnAllWorkspaces(true);
+
+  mainWindow.on('blur', () => {
+    if (!mainWindow.webContents.isDevToolsOpened()) {
+      mainWindow.hide();
+    }
   });
 
   const toggleWindow = () => {
@@ -30,12 +47,17 @@ if (isProd) {
       mainWindow.hide();
     } else {
       mainWindow.show();
-      mainWindow.focus();
     }
   };
 
-  tray.on('click', () => {
+  tray.on('double-click', toggleWindow);
+  tray.on('click', (event) => {
     toggleWindow();
+
+    // Show devtools when command clicked
+    if (mainWindow.isVisible() && process.defaultApp && event.metaKey) {
+      mainWindow.webContents.openDevTools({ mode: 'detach' });
+    }
   });
 
   if (isProd) {
@@ -43,7 +65,6 @@ if (isProd) {
   } else {
     const port = process.argv[2]
     await mainWindow.loadURL(`http://localhost:${port}/home`)
-    mainWindow.webContents.openDevTools()
   }
 })()
 
