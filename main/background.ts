@@ -31,7 +31,21 @@ if (isProd) {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
+    icon: path.join(process.cwd(), 'resources/icon.ico'),
   });
+
+  const getWindowPosition = () => {
+    const windowBounds = mainWindow.getBounds();
+    const trayBounds = tray.getBounds();
+  
+    // Center window horizontally below the tray icon
+    const x = Math.round(trayBounds.x + (trayBounds.width / 2) - (windowBounds.width / 2));
+  
+    // Position window 4 pixels vertically below the tray icon
+    const y = Math.round(trayBounds.y + trayBounds.height + 4);
+  
+    return { x: x, y: y };
+  };
 
   mainWindow.setAlwaysOnTop(true, 'screen-saver');
   mainWindow.setVisibleOnAllWorkspaces(true);
@@ -42,11 +56,18 @@ if (isProd) {
     }
   });
 
+  const showWindow = () => {
+    const position = getWindowPosition();
+    mainWindow.setPosition(position.x, position.y, false);
+    mainWindow.show();
+    mainWindow.focus();
+  };
+
   const toggleWindow = () => {
     if (mainWindow.isVisible()) {
       mainWindow.hide();
     } else {
-      mainWindow.show();
+      showWindow();
     }
   };
 
