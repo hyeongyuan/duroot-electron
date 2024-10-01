@@ -1,7 +1,7 @@
 import path from 'path'
 import { app, ipcMain } from 'electron'
 import serve from 'electron-serve'
-import { createWindow } from './helpers'
+import { createTray, createWindow } from './helpers'
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -14,13 +14,28 @@ if (isProd) {
 ;(async () => {
   await app.whenReady()
 
+  const tray = createTray();
+
   const mainWindow = createWindow('main', {
     width: 1000,
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-  })
+  });
+
+  const toggleWindow = () => {
+    if (mainWindow.isVisible()) {
+      mainWindow.hide();
+    } else {
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  };
+
+  tray.on('click', () => {
+    toggleWindow();
+  });
 
   if (isProd) {
     await mainWindow.loadURL('app://./home')
