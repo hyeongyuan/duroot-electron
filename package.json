@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "my-nextron-app",
-  "description": "My application description",
+  "name": "duroot-electron",
+  "description": "Desktop applications that gather and view information related to GitHub",
   "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "author": "Hyeongyu An <hyeongyu2656@gmail.com>",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
