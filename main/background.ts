@@ -96,6 +96,9 @@ if (isProd) {
   ipcMain.handle('storage:set', (_event, key, value) => {
     return storage.set(key, value);
   });
+  ipcMain.handle('storage:delete', (_event, key) => {
+    return storage.delete(key);
+  });
 })()
 
 app.on('window-all-closed', () => {

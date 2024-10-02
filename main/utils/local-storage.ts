@@ -14,4 +14,8 @@ export class LocalStorage {
   set (key: string, value: any) {
     this._store.set(key, value);
   }
+
+  delete (key: string) {
+    this._store.delete(key);
+  }
 }
