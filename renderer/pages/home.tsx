@@ -18,7 +18,7 @@ export default function HomePage() {
         try {
           const user = await fetchUser(token);
           
-          setAuthData(user);
+          setAuthData({ user, token });
   
           router.replace('/pulls');
         } catch (error) {

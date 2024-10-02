@@ -26,7 +26,7 @@ export const withAuth = <P extends AuthProps>(WrappedComponent: React.ComponentT
           try {
             const user = await fetchUser(token);
             
-            setAuthData(user);
+            setAuthData({ user, token });
           } catch (error) {
             router.replace('/auth');
           }

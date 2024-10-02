@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { Avatar } from './common/avatar';
@@ -24,7 +23,7 @@ export function Header() {
         <div className="cursor-pointer">
           <Avatar
             size={24}
-            imageUrl={data ? `https://avatars.githubusercontent.com/u/${data.id}?s=40&v=4` : ''}
+            imageUrl={data ? `https://avatars.githubusercontent.com/u/${data.user.id}?s=40&v=4` : ''}
           />
         </div>
       </div>
