@@ -1,7 +1,9 @@
+import { Header } from '../components/header';
+
 export default function PullsPage() {
   return (
-    <div>
-      <h1>Pull Requests</h1>
+    <div className="w-full">
+      <Header />
     </div>
   );
 }
