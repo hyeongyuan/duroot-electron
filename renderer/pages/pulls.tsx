@@ -1,9 +1,12 @@
 import { Header } from '../components/header';
+import { withAuth } from '../hocs/with-auth';
 
-export default function PullsPage() {
+function PullsPage() {
   return (
     <div className="w-full">
       <Header />
     </div>
   );
 }
+
+export default withAuth(PullsPage);

@@ -11,6 +11,10 @@ export default function HomePage() {
   useEffect(() => {
     window.ipc.invoke('storage:get', 'auth.token')
       .then(async (token) => {
+        if (!token) {
+          router.replace('/auth');
+          return;
+        }
         try {
           const user = await fetchUser(token);
           
@@ -18,6 +22,8 @@ export default function HomePage() {
   
           router.replace('/pulls');
         } catch (error) {
+          await window.ipc.invoke('storage:delete', 'auth.token');
+
           router.replace('/auth');
         }
       });

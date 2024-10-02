@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { AxiosError } from 'axios';
 
@@ -10,6 +11,7 @@ const ERROR_MESSAGE: Record<number, string> = {
 };
 
 export default function AuthPage() {
+  const router = useRouter();
   const [inputValue, setInputValue] = useState('');
   const [message, setMessage] = useState('');
   
@@ -20,7 +22,7 @@ export default function AuthPage() {
 
       await window.ipc.invoke('storage:set', 'auth.token', inputValue);
 
-      console.log('success to save token');
+      router.replace('/home');
     } catch (error) {
       if (error instanceof AxiosError) {
         const { status } = error.response || { status: 599 };
