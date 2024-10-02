@@ -2,6 +2,7 @@ import path from 'path'
 import { app, ipcMain } from 'electron'
 import serve from 'electron-serve'
 import { createTray, createWindow } from './helpers'
+import { LocalStorage } from './utils/local-storage';
 
 const isProd = process.env.NODE_ENV === 'production';
 const isMac = process.platform === 'darwin';
@@ -87,12 +88,17 @@ if (isProd) {
     const port = process.argv[2]
     await mainWindow.loadURL(`http://localhost:${port}/home`)
   }
+
+  const storage = new LocalStorage('v1');
+  ipcMain.handle('storage:get', (_event, key) => {
+    return storage.get(key);
+  });
+  ipcMain.handle('storage:set', (_event, key, value) => {
+    return storage.set(key, value);
+  });
 })()
 
 app.on('window-all-closed', () => {
   app.quit()
 })
 
-ipcMain.on('message', async (event, arg) => {
-  event.reply('message', `${arg} World!`)
-})
