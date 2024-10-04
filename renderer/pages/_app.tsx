@@ -11,6 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <QueryProvider>
         <Component {...pageProps} />
       </QueryProvider>
+      <div id="portal-spinner" />
     </div>
   );
 }

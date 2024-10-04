@@ -12,6 +12,7 @@ import { RoundButton } from '../common/round-button';
 import { formatDistanceToNow } from 'date-fns';
 import { PullsItem } from './pulls-item';
 import { MyPullsItem } from './my-pulls-item';
+import { Spinner } from '../common/spinner';
 
 const WINDOW_HEIGHT = 500;
 const HEADER_SECTION_HEIGHT = HEADER_HEIGHT + TABS_HEIGHT;
@@ -110,6 +111,7 @@ export function PullsList() {
         </p>
       </div>
       {renderList()}
+      <Spinner show={isLoading || isRefetching} />
     </div>
   )
 }
