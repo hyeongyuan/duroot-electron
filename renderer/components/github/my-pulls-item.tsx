@@ -3,6 +3,7 @@ import { Label } from '../common/label';
 import { useAuthStore } from '../../stores/auth';
 import { ApprovedMark } from '../common/approved-mark';
 import { fetchReviewCount } from '../../apis/github';
+import { Anchor } from '../common/anchor';
 
 interface MyPullsItemProps {
   title: string;
@@ -32,23 +33,21 @@ export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pu
   return (
     <li className="flex flex-col px-4 py-2">
       <div className="flex items-center">
-        <a
+        <Anchor
           className="text-[#768390] text-xs leading-5 line-clamp-1 break-all hover:underline hover:underline-offset-1 pr-1"
           href={subtitleUrl}
-          target="_blank"
         >
           {subtitle}
-        </a>
+        </Anchor>
         {(!draft && allApproved) && <ApprovedMark />}
       </div>
       <div className={labels.length > 0 ? 'mb-1' : ''}>
-        <a
+        <Anchor
           className="font-medium text-sm hover:text-[#539bf5] leading-6 line-clamp-3 break-all"
           href={titleUrl}
-          target="_blank"
         >
           {title}
-        </a>
+        </Anchor>
       </div>
       <span className="flex flex-wrap gap-1">
         {labels.map(({ name, color }) => (

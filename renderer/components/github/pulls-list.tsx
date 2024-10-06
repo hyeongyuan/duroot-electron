@@ -51,7 +51,7 @@ export function PullsList() {
         return;
       }
       const urls = pulls.items.map(item => item.html_url);
-      urls.forEach(url => open(url));
+      urls.forEach(url => window.ipc.openExternal(url));
     };
     return (
       <>

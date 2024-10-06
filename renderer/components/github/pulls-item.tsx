@@ -1,5 +1,6 @@
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import { Label } from '../common/label';
+import { Anchor } from '../common/anchor';
 
 const getProfileUrl = (userId: number, size = 40) => `https://avatars.githubusercontent.com/u/${userId}?s=${size}&v=4`;
 
@@ -23,22 +24,22 @@ export function PullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, user
   return (
     <li className="flex flex-col px-4 py-2">
       <div className="flex items-center">
-        <a
+        <Anchor
           className="text-[#768390] text-xs leading-5 line-clamp-1 break-all hover:underline hover:underline-offset-1 pr-1"
           href={subtitleUrl}
           target="_blank"
         >
           {subtitle}
-        </a>
+        </Anchor>
       </div>
       <div className={labels.length > 0 ? 'mb-1' : ''}>
-        <a
+        <Anchor
           className="font-medium text-sm hover:text-[#539bf5] leading-6 line-clamp-3 break-all"
           href={titleUrl}
           target="_blank"
         >
           {title}
-        </a>
+        </Anchor>
       </div>
       <span className={`${labels.length > 0 ? 'mb-1' : ''} flex flex-wrap space-x-1 gap-1`}> 
         {labels.map(({ name, color }) => (
