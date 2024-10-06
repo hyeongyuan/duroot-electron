@@ -30,8 +30,8 @@ if (isProd) {
     resizable: false,
     transparent: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
     icon: path.join(process.cwd(), 'resources/icon.ico'),
   });
@@ -100,6 +100,8 @@ if (isProd) {
   ipcMain.handle('storage:delete', (_event, key) => {
     return storage.delete(key);
   });
+
+  ipcMain.handle('version', () => app.getVersion());
 })()
 
 app.on('window-all-closed', () => {

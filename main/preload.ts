@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent, shell } from 'electron'
+import { contextBridge, ipcRenderer, IpcRendererEvent, shell } from 'electron';
 
 const handler = {
   send(channel: string, value: unknown) {
@@ -18,7 +18,7 @@ const handler = {
   },
   openExternal(url: string) {
     shell.openExternal(url);
-  }
+  },
 }
 
 contextBridge.exposeInMainWorld('ipc', handler)
