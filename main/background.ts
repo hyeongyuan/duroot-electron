@@ -102,6 +102,7 @@ if (isProd) {
   });
 
   ipcMain.handle('version', () => app.getVersion());
+  ipcMain.handle('quit', () => app.quit());
 })()
 
 app.on('window-all-closed', () => {
