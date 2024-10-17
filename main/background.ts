@@ -49,8 +49,7 @@ if (isProd) {
     return { x: x, y: y };
   };
 
-  mainWindow.setAlwaysOnTop(true, 'screen-saver');
-  mainWindow.setVisibleOnAllWorkspaces(true);
+  mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
   mainWindow.on('blur', () => {
     if (!mainWindow.webContents.isDevToolsOpened()) {
