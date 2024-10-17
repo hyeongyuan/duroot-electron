@@ -35,6 +35,10 @@ input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #545d68;
 }
 
+:root {
+  color-scheme: dark;
+}
+
 img {
   -webkit-user-drag: none;
   -khtml-user-drag: none;
