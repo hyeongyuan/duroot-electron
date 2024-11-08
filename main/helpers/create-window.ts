@@ -3,20 +3,20 @@ import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
   Rectangle,
-} from 'electron'
-import Store from 'electron-store'
+} from 'electron';
+import Store from 'electron-store';
 
 export const createWindow = (
   windowName: string,
   options: BrowserWindowConstructorOptions
-): BrowserWindow => {
+) => {
   const key = 'window-state'
   const name = `window-state-${windowName}`
   const store = new Store<Rectangle>({ name })
   const defaultSize = {
     width: options.width,
     height: options.height,
-  }
+  };
   let state = {}
 
   const restore = () => store.get(key, defaultSize)
@@ -80,7 +80,20 @@ export const createWindow = (
     },
   })
 
-  win.on('close', saveState)
+  win.on('close', saveState);
 
-  return win
-}
+  const updateWindowSize = (width: number, height: number) => {
+    const { x: currentX, y, width: currentWidth, height: currentHeight } = getCurrentPosition();
+
+    win.setSize(width, height);
+    if (width !== currentWidth) {
+      const distX = (currentWidth - width) / 2;
+      win.setPosition(currentX + distX, y)
+    }
+  };
+
+  return {
+    window: win,
+    updateWindowSize,
+  };
+};

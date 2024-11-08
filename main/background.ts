@@ -21,7 +21,7 @@ if (isProd) {
   if (isMac) {
     app.dock.hide();
   }
-  const mainWindow = createWindow('main', {
+  const { window: mainWindow } = createWindow('main', {
     width: 400,
     height: 500,
     show: false,
