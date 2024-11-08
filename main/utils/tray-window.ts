@@ -95,6 +95,16 @@ export class TrayWindow {
     this._window.hide();
   };
 
+  setSize = ({ width, height }: WindowSize) => {
+    const { x: currentX, y: currentY, width: currentWidth } = this._getCurrentWindowState();
+
+    this._window.setSize(width, height);
+    if (width !== currentWidth) {
+      const distX = (currentWidth - width) / 2;
+      this._window.setPosition(currentX + distX, currentY);
+    }
+  };
+
   openDevTool = (options?: OpenDevToolsOptions) => {
     this._window.webContents.openDevTools(options);
   };
