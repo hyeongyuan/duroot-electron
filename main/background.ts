@@ -1,22 +1,22 @@
-import path from 'path'
-import { app, ipcMain } from 'electron'
-import serve from 'electron-serve'
-import { createTray, createWindow } from './helpers'
+import path from 'path';
+import { app, ipcMain } from 'electron';
+import serve from 'electron-serve';
+import { createTray, createWindow } from './helpers';
 import { LocalStorage } from './utils/local-storage';
 
 const isProd = process.env.NODE_ENV === 'production';
 const isMac = process.platform === 'darwin';
 
 if (isProd) {
-  serve({ directory: 'app' })
+  serve({ directory: 'app' });
 } else {
-  app.setPath('userData', `${app.getPath('userData')} (development)`)
+  app.setPath('userData', `${app.getPath('userData')} (development)`);
 }
 
 ;(async () => {
-  await app.whenReady()
+  await app.whenReady();
 
-  const tray = createTray();
+  const tray = createTray();;
 
   if (isMac) {
     app.dock.hide();
@@ -83,10 +83,10 @@ if (isProd) {
   });
 
   if (isProd) {
-    await mainWindow.loadURL('app://./home')
+    await mainWindow.loadURL('app://./home');
   } else {
-    const port = process.argv[2]
-    await mainWindow.loadURL(`http://localhost:${port}/home`)
+    const port = process.argv[2];
+    await mainWindow.loadURL(`http://localhost:${port}/home`);
   }
 
   const storage = new LocalStorage('v1');
@@ -102,9 +102,8 @@ if (isProd) {
 
   ipcMain.handle('version', () => app.getVersion());
   ipcMain.handle('quit', () => app.quit());
-})()
+})();
 
 app.on('window-all-closed', () => {
-  app.quit()
-})
-
+  app.quit();
+});
