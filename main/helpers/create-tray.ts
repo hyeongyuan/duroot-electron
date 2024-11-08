@@ -7,8 +7,8 @@ const getResourcesPath = (pathname: string) => {
   return path.join(isProd ? process.resourcesPath : process.cwd(), pathname);
 };
 
-const getTrayIcon = () => {
-  const icon = nativeImage.createFromPath(getResourcesPath('assets/tray-icon.png'));
+export const getTrayIcon = (filename: string) => {
+  const icon = nativeImage.createFromPath(getResourcesPath(`assets/${filename}`));
   const trayIcon = icon.resize({ width: 18 });
 
   trayIcon.setTemplateImage(true);
@@ -17,7 +17,7 @@ const getTrayIcon = () => {
 };
 
 export const createTray = () => {
-  const trayIcon = getTrayIcon();
+  const trayIcon = getTrayIcon('tray-icon.png');
 
   const tray = new Tray(trayIcon);
 
