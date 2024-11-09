@@ -46,5 +46,5 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
         env:
           # macOS notarization API key
-          API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
-          API_KEY_ISSUER_ID: ${{ secrets.APPLE_API_KEY_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_ISSUER: ${{ secrets.APPLE_API_KEY_ISSUER_ID }}
