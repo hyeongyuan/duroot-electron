@@ -14,4 +14,7 @@ extraResources:
     to: assets
     filter:
       - '**/*'
-publish: null
+publish:
+  - provider: github
+    owner: hyeongyuan
+    repo: duroot-electron
