@@ -19,7 +19,7 @@ publish:
     owner: hyeongyuan
     repo: duroot-electron
 
-afterSign: electron-builder-notarize
-mac:
-  hardenedRuntime: true
-  entitlements: ./node_modules/electron-builder-notarize/entitlements.mac.inherit.plist
+# afterSign: electron-builder-notarize
+# mac:
+#   hardenedRuntime: true
+#   entitlements: ./node_modules/electron-builder-notarize/entitlements.mac.inherit.plist
