@@ -18,3 +18,5 @@ publish:
   - provider: github
     owner: hyeongyuan
     repo: duroot-electron
+
+afterSign: electron-builder-notarize
