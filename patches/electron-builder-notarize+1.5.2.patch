@@ -1,0 +1,21 @@
+diff --git a/node_modules/electron-builder-notarize/index.js b/node_modules/electron-builder-notarize/index.js
+index afe8743..896cdac 100644
+--- a/node_modules/electron-builder-notarize/index.js
++++ b/node_modules/electron-builder-notarize/index.js
+@@ -84,6 +84,7 @@ module.exports = async params => {
+ 	console.log(`📦 Start notarizing ${appId} found at ${appPath}`);
+ 
+ 	try {
++		console.log('notarizeOptions', notarizeOptions);
+ 		const res = await notarize(notarizeOptions);
+ 
+ 		if (!res) {
+@@ -96,6 +97,8 @@ module.exports = async params => {
+ 			throw new Error('📃 Error(1048): You must first sign the relevant contracts online');
+ 		}
+ 
++		console.log('error', error);
++		console.log('message', error.message);
+ 		fs.writeFileSync('notarization-error.log', error.message);
+ 
+ 		throw new Error('❌ Notarization Error,please check notarization-error.log');
