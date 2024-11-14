@@ -4,6 +4,7 @@ import serve from 'electron-serve';
 import { createTray } from './helpers';
 import { LocalStorage } from './utils/local-storage';
 import { TrayWindow } from './utils/tray-window';
+import { AppUpdater } from './utils/app-updater';
 
 const isProd = process.env.NODE_ENV === 'production';
 const isMac = process.platform === 'darwin';
@@ -22,6 +23,7 @@ if (isProd) {
   if (isMac) {
     app.dock.hide();
   }
+  const appUpdater = new AppUpdater();
   const window = new TrayWindow(tray, 'main', {
     width: 400,
     height: 500,
@@ -62,6 +64,8 @@ if (isProd) {
 
   ipcMain.handle('version', () => app.getVersion());
   ipcMain.handle('quit', () => app.quit());
+
+  appUpdater.checkForUpdatesAndNotify();
 })();
 
 app.on('window-all-closed', () => {
