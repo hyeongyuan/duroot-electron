@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../stores/auth';
-import { GithubUser } from '../types/github';
+import type { GithubUser } from '../types/github';
 import { fetchUser } from '../apis/github';
 
 export interface AuthProps {

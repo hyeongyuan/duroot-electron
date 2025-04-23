@@ -1,4 +1,4 @@
-import { MouseEvent } from "react";
+import type { MouseEvent } from "react";
 
 interface AnchorProps extends React.HTMLProps<HTMLAnchorElement> {
   children: React.ReactNode;

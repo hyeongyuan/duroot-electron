@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import { nativeImage, Tray } from 'electron';
 
 const isProd = process.env.NODE_ENV === 'production';

@@ -61,6 +61,7 @@ export default function AuthPage() {
               )}
             </div>
             <button
+              type="button"
               className="bg-[#347d39] hover:bg-[#46954a] text-[#ffffff] text-sm rounded h-[32px] px-4 border border-[rgba(205,217,229,0.1)]"
               onClick={handleSubmit}
               disabled={!inputValue}

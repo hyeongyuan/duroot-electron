@@ -1,4 +1,4 @@
-import { BrowserWindow, BrowserWindowConstructorOptions, OpenDevToolsOptions, Rectangle, Tray } from "electron";
+import { BrowserWindow, type BrowserWindowConstructorOptions, type OpenDevToolsOptions, type Rectangle, type Tray } from "electron";
 import Store from 'electron-store';
 
 type WindowPosition = Pick<Rectangle, 'x' | 'y'>;

@@ -11,7 +11,7 @@ export class LocalStorage {
     return this._store.get(key);
   }
 
-  set (key: string, value: any) {
+  set (key: string, value: unknown) {
     this._store.set(key, value);
   }
 

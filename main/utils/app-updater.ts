@@ -15,12 +15,12 @@ export class AppUpdater {
       this._log.info('Update not available.');
     });
     autoUpdater.on('error', (err) => {
-      this._log.info('Error in auto-updater. ' + err);
+      this._log.info(`Error in auto-updater. ${err}`);
     });
     autoUpdater.on('download-progress', (progressObj) => {
-      let log_message = "Download speed: " + progressObj.bytesPerSecond;
-      log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-      log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+      let log_message = `Download speed: ${progressObj.bytesPerSecond}`;
+      log_message = `${log_message} - Downloaded ${progressObj.percent}%`;
+      log_message = `${log_message} (${progressObj.transferred}/${progressObj.total})`;
 
       this._log.info(log_message);
     })
