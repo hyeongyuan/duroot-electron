@@ -38,12 +38,6 @@ export function Header() {
     };
   }, []);
 
-  const handleClickQuit = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-
-    window.ipc.invoke('quit');
-  };
-  
   return (
     <div
       style={{ height: `${HEADER_HEIGHT}px` }}

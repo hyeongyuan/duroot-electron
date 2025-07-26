@@ -6,6 +6,7 @@ import { AxiosError } from 'axios';
 import { fetchUser } from '../apis/github';
 import { Input } from '../components/input';
 import { Anchor } from '../components/common/anchor';
+import { ipcHandler } from '../utils/ipc';
 
 const ERROR_MESSAGE: Record<number, string> = {
   401: 'It is not a valid token.',
@@ -21,7 +22,7 @@ export default function AuthPage() {
     try {
       await fetchUser(inputValue);
 
-      await window.ipc.invoke('storage:set', 'auth.token', inputValue);
+      await ipcHandler.setStorage('auth.token', inputValue);
 
       router.replace('/home');
     } catch (error) {

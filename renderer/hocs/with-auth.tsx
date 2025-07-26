@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../stores/auth';
 import type { GithubUser } from '../types/github';
 import { fetchUser } from '../apis/github';
+import { ipcHandler } from '../utils/ipc';
 
 export interface AuthProps {
   auth: GithubUser;
@@ -17,7 +18,7 @@ export const withAuth = <P extends AuthProps>(WrappedComponent: React.ComponentT
       if (authData) {
         return;
       }
-      window.ipc.invoke('storage:get', 'auth.token')
+      ipcHandler.getStorage('auth.token')
         .then(async (token?: string) => {
           if (!token) {
             router.replace('/auth');

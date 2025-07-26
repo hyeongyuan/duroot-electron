@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { HEADER_HEIGHT } from "../components/header";
 import { useAuthStore } from "../stores/auth";
-import { useEffect, useState } from "react";
+import { ipcHandler } from "../utils/ipc";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -9,11 +10,11 @@ export default function SettingsPage() {
   const [version, setVersion] = useState('');
 
   useEffect(() => {
-    window.ipc.invoke('version').then(setVersion);
+    ipcHandler.getVersion().then(setVersion);
   }, []);
 
   const handleSignOut = async () => {
-    await window.ipc.invoke('storage:delete', 'auth.token');
+    await ipcHandler.deleteStorage('auth.token');
 
     setAuthData(null);
 
@@ -37,7 +38,7 @@ export default function SettingsPage() {
         <h1 className="text-[#e6edf3]">Settings</h1>
       </div>
       <div className="pt-4">
-        <section className="px-6 pb-8">
+        <section className="px-6 pb-4">
           <div className="m-2">
             <h2 className="text-[11px]">VERSION</h2>
           </div>

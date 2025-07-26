@@ -13,6 +13,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { PullsItem } from './pulls-item';
 import { MyPullsItem } from './my-pulls-item';
 import { Spinner } from '../common/spinner';
+import { ipcHandler } from '../../utils/ipc';
 
 const WINDOW_HEIGHT = 500;
 const HEADER_SECTION_HEIGHT = HEADER_HEIGHT + TABS_HEIGHT;
@@ -51,7 +52,7 @@ export function PullsList() {
         return;
       }
       const urls = pulls.items.map(item => item.html_url);
-      urls.forEach(url => window.ipc.openExternal(url));
+      urls.forEach(url => ipcHandler.openExternal(url));
     };
     return (
       <>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useAuthStore } from "../stores/auth";
 import { Avatar } from "./common/avatar";
+import { ipcHandler } from "../utils/ipc";
 
 interface DrawerProps {
   visible: boolean;
@@ -13,7 +14,7 @@ export function Drawer({ visible, onClose }: DrawerProps) {
   const handleClickQuit = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
 
-    window.ipc.invoke('quit');
+    ipcHandler.quit();
   };
 
   return (
