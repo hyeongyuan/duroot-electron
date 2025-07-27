@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { GithubPull, GithubReview, GitHubReviewState, GithubSearch, GithubUser } from '../types/github';
+import type { GithubPull, GithubReview, GithubSearch, GithubUser } from '../types/github';
 
 const SELF = '@me';
 
@@ -79,17 +79,25 @@ export const fetchReviewCount = async (token: string, pullRequestUrl: string, lo
     fetchPullRequest(token, pullRequestUrl),
     fetchPullRequestReviews(token, pullRequestUrl),
   ]);
-  const reviewObject = reviews.reduce((prevObject, review) => {
-    if (review.user.login === login || review.user.type === 'Bot' || prevObject[review.user.login] === 'APPROVED') {
-      return prevObject;
+
+  const approvedUsers = [];
+  const totalUsers = [];
+
+  reviews.forEach(review => {
+    if (review.user.login === login || review.user.type === 'Bot') {
+      return;
     }
-    return {
-      ...prevObject,
-      [review.user.login]: review.state,
-    };
-  }, {} as Record<string, GitHubReviewState>);
+    if (review.state === 'APPROVED') {
+      approvedUsers.push(review.user.login);
+    }
+    totalUsers.push(review.user.login);
+  });
+  pullRequest.requested_reviewers.forEach(reviewer => {
+    totalUsers.push(reviewer.login);
+  });
+
   return {
-    approved: Object.values(reviewObject).filter(state => state === 'APPROVED').length,
-    total: Object.keys(reviewObject).length + pullRequest.requested_reviewers.length,
+    approved: Array.from(new Set(approvedUsers)).length,
+    total: Array.from(new Set(totalUsers)).length,
   };
 };

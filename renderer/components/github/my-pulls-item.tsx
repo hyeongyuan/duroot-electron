@@ -39,7 +39,13 @@ export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pu
         >
           {subtitle}
         </Anchor>
-        {(!draft && allApproved) && <ApprovedMark />}
+        {(!draft && reviewCount) ? (
+          allApproved
+            ? <ApprovedMark />
+            : <p className="text-[#768390] text-xs">
+                {`· ${reviewCount.approved}/${reviewCount.total}`}
+              </p>
+        ) : null}
       </div>
       <div className={labels.length > 0 ? 'mb-1' : ''}>
         <Anchor
