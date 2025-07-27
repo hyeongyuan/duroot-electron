@@ -84,7 +84,7 @@ export function PullsList() {
           <IconButton onClick={refetch}>
             <ArrowPathIcon className="size-4" />
           </IconButton>
-          <IconButton onClick={handleClickOpenAll}>
+          <IconButton onClick={handleClickOpenAll} tooltip='Open all'>
             <ArrowTopRightOnSquareIcon className="size-4" />
           </IconButton>
           <LabelsFilter data={labelFilters} onChange={onChangeLabelFilter} />

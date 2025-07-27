@@ -35,7 +35,7 @@ export function LabelsFilter({ data, onChange }: LabelsFilterProps) {
 
   return (
     <div className="relative" ref={elementRef}>
-      <IconButton onClick={toggleIsOpen}>
+      <IconButton onClick={toggleIsOpen} tooltip={isOpen ? '' : 'Filter labels'}>
         <TagIcon className="size-4" />
       </IconButton>
       {isOpen && (
