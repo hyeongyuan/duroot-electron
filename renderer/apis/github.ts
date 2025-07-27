@@ -87,7 +87,7 @@ export const fetchReviewCount = async (token: string, pullRequestUrl: string, lo
     if (review.user.login === login || review.user.type === 'Bot') {
       return;
     }
-    if (review.state === 'APPROVED') {
+    if (review.state === 'APPROVED' && pullRequest.requested_reviewers.every(reviewer => reviewer.login !== review.user.login)) {
       approvedUsers.push(review.user.login);
     }
     totalUsers.push(review.user.login);
