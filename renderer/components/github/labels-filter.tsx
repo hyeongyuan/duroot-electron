@@ -51,10 +51,10 @@ export function LabelsFilter({ data, onChange }: LabelsFilterProps) {
             {data.map(({ name, checked }) => (
               <li key={name} className="mx-2 cursor-pointer" onClick={() => onChange?.({ name, checked: !checked })}>
                 <div className="flex items-center p-2 hover:bg-[#3d444e] text-[#adbac7] hover:text-[#e6edf3] rounded-md">
-                  <div className="w-4 h-4">
+                  <div className="w-4 h-4 mr-2">
                     {checked ? <CheckIcon className="size-4" /> : null}
                   </div>
-                  <span className="ml-2">{name}</span>
+                  <span className="text-ellipsis overflow-hidden">{name}</span>
                 </div>
               </li>
             ))}
