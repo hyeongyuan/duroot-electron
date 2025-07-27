@@ -137,7 +137,7 @@ export function PullsList() {
     <div style={{ height: `${WINDOW_HEIGHT - HEADER_SECTION_HEIGHT}px` }} className="overflow-y-auto">
       <div className="py-2">
         <p className="text-[#768390] text-[10px] text-center">
-          {`Last Update ${format(pulls?.lastUpdatedAt || new Date(), 'HH\'h\' mm\'m\' ss\'s\'')}`}
+          {`Last Update ${formatDistanceToNow(pulls?.lastUpdatedAt || new Date())}`}
         </p>
       </div>
       {renderList()}
