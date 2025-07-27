@@ -42,7 +42,7 @@ export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pu
         {(!draft && reviewCount) ? (
           allApproved
             ? <ApprovedMark />
-            : <p className="text-[#768390] text-xs">
+            : <p className="text-[#768390] text-xs tracking-wide">
                 {`· ${reviewCount.approved}/${reviewCount.total}`}
               </p>
         ) : null}
