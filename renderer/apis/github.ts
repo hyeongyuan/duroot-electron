@@ -80,7 +80,7 @@ export const fetchReviewCount = async (token: string, pullRequestUrl: string, lo
     fetchPullRequestReviews(token, pullRequestUrl),
   ]);
   const reviewObject = reviews.reduce((prevObject, review) => {
-    if (review.user.login === login || prevObject[review.user.login] === 'APPROVED') {
+    if (review.user.login === login || review.user.type === 'Bot' || prevObject[review.user.login] === 'APPROVED') {
       return prevObject;
     }
     return {
