@@ -1,7 +1,6 @@
 import { ArrowPathIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/solid';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
-import { format } from 'date-fns/format';
 import { useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { useStorage } from '../../hooks/use-storage';
@@ -14,6 +13,7 @@ import { TABS_HEIGHT } from "../common/tabs";
 import { HEADER_HEIGHT } from "../header";
 import { Empty } from './empty';
 import { LabelsFilter } from './labels-filter';
+import { LastUpdateTimer } from './last-update-timer';
 import { MyPullsItem } from './my-pulls-item';
 import { PullsItem } from './pulls-item';
 import { TabKey } from './pulls-tabs';
@@ -136,12 +136,10 @@ export function PullsList() {
   return (
     <div style={{ height: `${WINDOW_HEIGHT - HEADER_SECTION_HEIGHT}px` }} className="overflow-y-auto">
       <div className="py-2">
-        <p className="text-[#768390] text-[10px] text-center">
-          {`Last Update ${formatDistanceToNow(pulls?.lastUpdatedAt || new Date())}`}
-        </p>
+        <LastUpdateTimer lastUpdatedAt={pulls?.lastUpdatedAt ?? new Date()} />
       </div>
       {renderList()}
       <Spinner show={isLoading || isRefetching} />
     </div>
-  )
+  );
 }
