@@ -1,4 +1,4 @@
-import { fetchPullRequestsBy, fetchRequestedPullRequests, fetchReviewedPullRequests } from "../apis/github";
+import { fetchApprovedPullRequests, fetchPullRequestsBy, fetchRequestedPullRequests, fetchReviewedPullRequests } from "../apis/github";
 
 export const queryMyPullRequests = async (token: string) => {
   const { items }= await fetchPullRequestsBy(token);
@@ -17,17 +17,17 @@ export const queryRequestedPullRequests = async (token: string) => {
 };
 
 export const queryReviewedPullRequests = async (token: string, login?: string) => {
-  const { reviewedItems } = await fetchReviewedPullRequests(token, login);
+  const { items } = await fetchReviewedPullRequests(token, login);
   return {
-    items: reviewedItems.filter(item => !item.draft),
+    items: items.filter(item => !item.draft),
     lastUpdatedAt: new Date(),
   };
 };
 
 export const queryApprovedPullRequests = async (token: string, login?: string) => {
-  const { approvedItems } = await fetchReviewedPullRequests(token, login);
+  const { items } = await fetchApprovedPullRequests(token, login);
   return {
-    items: approvedItems.filter(item => !item.draft),
+    items: items.filter(item => !item.draft),
     lastUpdatedAt: new Date(),
   };
 };
