@@ -2,9 +2,10 @@ interface IconButtonProps {
   onClick?: () => void;
   children: React.ReactNode;
   tooltip?: string;
+  disabled?: boolean;
 }
 
-export function IconButton({ onClick, children, tooltip }: IconButtonProps) {
+export function IconButton({ onClick, children, tooltip, disabled }: IconButtonProps) {
   return (
     <div
       className={`${tooltip ? 'tooltip' : ''} before:bg-[#373e47] before:text-xs after:bg-[#373e47]'} tooltip-bottom`}
@@ -13,6 +14,7 @@ export function IconButton({ onClick, children, tooltip }: IconButtonProps) {
       <button
         className="bg-[#373e47] hover:bg-[#3d444e] border border-[#444c56] p-[4px] rounded"
         onClick={onClick}
+        disabled={disabled}
       >
         {children}
       </button>

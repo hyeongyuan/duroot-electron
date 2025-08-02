@@ -33,9 +33,14 @@ export function LabelsFilter({ data, onChange }: LabelsFilterProps) {
     };
   }, []);
 
+  const noLabel = data.length === 0;
+  const tooltip = isOpen
+    ? ''
+    : noLabel ? 'No label' : 'Filter labels';
+
   return (
     <div className="relative" ref={elementRef}>
-      <IconButton onClick={toggleIsOpen} tooltip={isOpen ? '' : 'Filter labels'}>
+      <IconButton onClick={toggleIsOpen} tooltip={tooltip} disabled={noLabel}>
         <TagIcon className="size-4" />
       </IconButton>
       {isOpen && (
