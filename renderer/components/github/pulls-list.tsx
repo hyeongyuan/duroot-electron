@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
-import { useStorage } from '../../hooks/use-storage';
 import { queryApprovedPullRequests, queryMyPullRequests, queryRequestedPullRequests, queryReviewedPullRequests } from '../../queries/github';
 import { useAuthStore } from '../../stores/auth';
+import { filterHideLabels, usePullsHideLabelsStore } from '../../stores/pulls';
 import { ipcHandler } from '../../utils/ipc';
 import { IconButton } from '../common/icon-button';
 import { Spinner } from '../common/spinner';
@@ -25,7 +25,7 @@ export function PullsList() {
   const searchParams = useSearchParams();
   const tabQuery = (searchParams.get('tab') || TabKey.MY_PULL_REQUESTS)as TabKey;
   const { data } = useAuthStore();
-  const [hideLabels, setHideLabels]  = useStorage<string[]>('pulls.labels.hide', []);
+  const { data: hideLabels, set: setHideLabels } = usePullsHideLabelsStore();
 
   const { data: pulls, isLoading, isRefetching, refetch } = useQuery({
     queryKey: ['pulls', tabQuery],
@@ -68,7 +68,7 @@ export function PullsList() {
       name: label,
       checked: !hideLabels.includes(label),
     }));
-    const filteredPulls = pulls.items.filter(pull => pull.labels.every(label => !hideLabels.includes(label.name)));
+    const filteredPulls = filterHideLabels(pulls.items, hideLabels);
 
     const handleClickOpenAll = () => {
       if (!pulls) {
