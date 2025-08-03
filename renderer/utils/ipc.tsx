@@ -17,4 +17,7 @@ export const ipcHandler = {
   deleteStorage: async (key: string): Promise<void> => {
     await window.ipc.invoke('storage:delete', key);
   },
+  setTrayIcon: async (iconName: string) => {
+    await window.ipc.invoke('set-tray-icon', iconName);
+  },
 };

@@ -2,9 +2,11 @@
 import { useQueries } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 
+import { useEffect } from 'react';
 import { queryApprovedPullRequests, queryMyPullRequests, queryRequestedPullRequests, queryReviewedPullRequests } from '../../queries/github';
 import { useAuthStore } from '../../stores/auth';
 import { filterHideLabels, usePullsHideLabelsStore } from '../../stores/pulls';
+import { ipcHandler } from '../../utils/ipc';
 import { type Tab, Tabs } from '../common/tabs';
 
 export enum TabKey {
@@ -69,6 +71,12 @@ export function  PullsTabs() {
       count: filterHideLabels(approvedPulls.data?.items, hideLabels).length,
     }
   ];
+  const requestedPullsCount = tabs[1].count;
+
+  useEffect(() => {
+    const trayIconName = requestedPullsCount > 0 ? 'tray-icon-active.png' : 'tray-icon.png';
+    ipcHandler.setTrayIcon(trayIconName);
+  }, [requestedPullsCount]);
 
   return <Tabs data={tabs} activeTab={tabQuery} />;
 }

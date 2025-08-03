@@ -7,8 +7,8 @@ export class LocalStorage {
     this._store = new Store({ name });
   }
 
-  get (key: string) {
-    return this._store.get(key);
+  get<T = unknown> (key: string): T | undefined {
+    return this._store.get(key) as T;
   }
 
   set (key: string, value: unknown) {

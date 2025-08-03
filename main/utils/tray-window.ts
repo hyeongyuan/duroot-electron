@@ -1,5 +1,6 @@
 import { BrowserWindow, type BrowserWindowConstructorOptions, type OpenDevToolsOptions, type Rectangle, type Tray } from "electron";
 import Store from 'electron-store';
+import { getTrayIcon } from "../helpers/create-tray";
 
 type WindowPosition = Pick<Rectangle, 'x' | 'y'>;
 type WindowSize = Pick<Rectangle, 'width' | 'height'>;
@@ -103,6 +104,15 @@ export class TrayWindow {
       const distX = (currentWidth - width) / 2;
       this._window.setPosition(currentX + distX, currentY);
     }
+  };
+
+  setTrayIcon = (iconName: string) => {
+    const trayIcon = getTrayIcon(iconName);
+    this._tray.setImage(trayIcon);
+  };
+
+  onShow = (callback: () => void) => {
+    this._window.on('show', callback);
   };
 
   openDevTool = (options?: OpenDevToolsOptions) => {

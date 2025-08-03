@@ -65,6 +65,10 @@ if (isProd) {
   ipcMain.handle('version', () => app.getVersion());
   ipcMain.handle('quit', () => app.quit());
 
+  ipcMain.handle('set-tray-icon', (_event, iconName) => {
+    window.setTrayIcon(iconName);
+  });
+
   appUpdater.checkForUpdatesAndNotify();
 })();
 

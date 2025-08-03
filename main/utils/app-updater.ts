@@ -32,4 +32,8 @@ export class AppUpdater {
   checkForUpdatesAndNotify() {
     return autoUpdater.checkForUpdatesAndNotify();
   }
+
+  checkForUpdates() {
+    return autoUpdater.checkForUpdates();
+  }
 }
