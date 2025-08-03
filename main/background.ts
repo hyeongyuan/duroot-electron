@@ -69,7 +69,9 @@ if (isProd) {
     window.setTrayIcon(iconName);
   });
 
-  appUpdater.checkForUpdatesAndNotify();
+  window.onShow(() => {
+    appUpdater.checkForUpdatesAndNotify();
+  });
 })();
 
 app.on('window-all-closed', () => {
