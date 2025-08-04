@@ -43,7 +43,7 @@ export const fetchPullRequestsBy = (token: string, author = SELF) => {
 };
 
 export const fetchRequestedPullRequests = async (token: string, login = SELF) => {
-  const query = `type:pr state:open user-review-requested:${login}`;
+  const query = `type:pr state:open draft:false user-review-requested:${login}`;
   return searchIssues(token, query);
 };
 
@@ -57,12 +57,12 @@ const fetchPullRequestReviews = async (token: string, pullRequestUrl: string) =>
 };
 
 export const fetchReviewedPullRequests = async (token: string, login = SELF) => {
-  const query = `type:pr state:open reviewed-by:${login} -author:${login} user-review-requested:${login}`;
+  const query = `type:pr state:open draft:false reviewed-by:${login} -author:${login} user-review-requested:${login}`;
   return searchIssues(token, query);
 };
 
 export const fetchApprovedPullRequests = (token: string, login = SELF) => {
-  const query = `type:pr state:open reviewed-by:${login} review:approved`;
+  const query = `type:pr state:open draft:false reviewed-by:${login} review:approved`;
   return searchIssues(token, query);
 };
 
