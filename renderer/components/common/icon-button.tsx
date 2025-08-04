@@ -12,7 +12,7 @@ export function IconButton({ onClick, children, tooltip, disabled }: IconButtonP
       data-tip={tooltip}
     >
       <button
-        className="bg-[#373e47] hover:bg-[#3d444e] border border-[#444c56] p-[4px] rounded"
+        className="bg-[#373e47] hover:bg-[#3d444e] border border-[#444c56] p-[4px] rounded cursor-pointer"
         onClick={onClick}
         disabled={disabled}
       >

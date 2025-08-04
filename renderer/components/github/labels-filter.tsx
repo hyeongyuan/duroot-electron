@@ -1,5 +1,5 @@
 import CheckIcon from "@heroicons/react/24/solid/CheckIcon";
-import TagIcon from "@heroicons/react/24/solid/TagIcon";
+import AdjustmentsHorizontalIcon from "@heroicons/react/24/solid/AdjustmentsHorizontalIcon";
 import { useEffect, useRef, useState } from "react";
 import { IconButton } from "../common/icon-button";
 
@@ -41,7 +41,7 @@ export function LabelsFilter({ data, onChange }: LabelsFilterProps) {
   return (
     <div className="relative" ref={elementRef}>
       <IconButton onClick={toggleIsOpen} tooltip={tooltip} disabled={noLabel}>
-        <TagIcon className="size-4" />
+        <AdjustmentsHorizontalIcon className="size-4" />
       </IconButton>
       {isOpen && (
         <div
