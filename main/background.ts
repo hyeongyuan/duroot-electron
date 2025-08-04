@@ -70,7 +70,7 @@ if (isProd) {
   });
 
   window.onShow(() => {
-    appUpdater.checkForUpdatesAndNotify();
+    appUpdater.checkForUpdates();
   });
 })();
 
