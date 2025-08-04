@@ -62,7 +62,7 @@ export const fetchReviewedPullRequests = async (token: string, login = SELF) => 
 };
 
 export const fetchApprovedPullRequests = (token: string, login = SELF) => {
-  const query = `type:pr state:open reviewed-by:${login} -author:${login} -user-review-requested:${login}`;
+  const query = `type:pr state:open reviewed-by:${login} review:approved`;
   return searchIssues(token, query);
 };
 
