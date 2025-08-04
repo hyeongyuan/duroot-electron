@@ -8,7 +8,7 @@ interface IconButtonProps {
 export function IconButton({ onClick, children, tooltip, disabled }: IconButtonProps) {
   return (
     <div
-      className={tooltip ? 'tooltip tooltip-bottom before:bg-[#373e47] before:text-xs after:bg-[#373e47]' : ''}
+      className="tooltip tooltip-bottom"
       data-tip={tooltip}
     >
       <button

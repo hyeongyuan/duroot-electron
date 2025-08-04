@@ -50,3 +50,7 @@ img {
 a {
   outline: none;
 }
+
+.tooltip {
+  @apply before:bg-[#373e47] before:text-xs after:bg-[#373e47];
+}
