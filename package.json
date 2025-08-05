@@ -2,7 +2,7 @@
   "private": true,
   "name": "duroot-electron",
   "description": "Desktop applications that gather and view information related to GitHub",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "author": "Hyeongyu An <hyeongyu2656@gmail.com>",
   "main": "app/background.js",
   "scripts": {
