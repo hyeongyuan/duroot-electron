@@ -27,21 +27,25 @@ export function  PullsTabs() {
       queryKey: ['pulls', TabKey.MY_PULL_REQUESTS],
       queryFn: () => queryMyPullRequests(data.token!),
       enabled: !!data,
+      refetchOnWindowFocus: false,
     },
     {
       queryKey: ['pulls', TabKey.REQUESTED_PULL_REQUESTS],
       queryFn: () => queryRequestedPullRequests(data.token!),
       enabled: !!data,
+      refetchOnWindowFocus: false,
     },
     {
       queryKey: ['pulls', TabKey.REVIEWED_PULL_REQUESTS],
       queryFn: () => queryReviewedPullRequests(data.token!, data.user.login!),
       enabled: !!data,
+      refetchOnWindowFocus: false,
     },
     {
       queryKey: ['pulls', TabKey.APPROVED_PULL_REQUESTS],
       queryFn: () => queryApprovedPullRequests(data.token!, data.user.login!),
       enabled: !!data,
+      refetchOnWindowFocus: false,
     },
   ] });
 
