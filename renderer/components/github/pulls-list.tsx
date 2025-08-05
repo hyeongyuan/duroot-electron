@@ -1,8 +1,9 @@
 import { ArrowPathIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/solid';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
-import { useSearchParams } from 'next/navigation';
-import { useCallback } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect } from 'react';
+import { isAuthorizedError } from '../../apis/github';
 import { queryApprovedPullRequests, queryMyPullRequests, queryRequestedPullRequests, queryReviewedPullRequests } from '../../queries/github';
 import { useAuthStore } from '../../stores/auth';
 import { filterHideLabels, usePullsHideLabelsStore } from '../../stores/pulls';
@@ -23,11 +24,12 @@ const HEADER_SECTION_HEIGHT = HEADER_HEIGHT + TABS_HEIGHT;
 
 export function PullsList() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const tabQuery = (searchParams.get('tab') || TabKey.MY_PULL_REQUESTS)as TabKey;
   const { data } = useAuthStore();
   const { data: hideLabels, set: setHideLabels } = usePullsHideLabelsStore();
 
-  const { data: pulls, isLoading, isRefetching, refetch } = useQuery({
+  const { data: pulls, isLoading, isRefetching, error, refetch } = useQuery({
     queryKey: ['pulls', tabQuery],
     queryFn: async () => {
       switch(tabQuery) {
@@ -43,6 +45,15 @@ export function PullsList() {
     },
     enabled: !!data,
   });
+
+  useEffect(() => {
+    if (isAuthorizedError(error)) {
+      ipcHandler.deleteStorage('auth.token')
+        .then(() => {
+          router.replace('/auth');
+        });
+    }
+  }, [error, router]);
 
 
   const onChangeLabelFilter = (label: { name: string; checked: boolean }) => {
