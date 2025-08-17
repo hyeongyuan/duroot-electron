@@ -1,17 +1,20 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent, shell } from 'electron';
 
+type EventCallback = (...args: unknown[]) => void;
+type RemoveEventListener = () => void;
+
 const handler = {
   send(channel: string, value: unknown) {
     ipcRenderer.send(channel, value)
   },
-  on(channel: string, callback: (...args: unknown[]) => void) {
+  on(channel: string, callback: EventCallback): RemoveEventListener {
     const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
       callback(...args)
     ipcRenderer.on(channel, subscription)
 
     return () => {
-      ipcRenderer.removeListener(channel, subscription)
-    }
+      ipcRenderer.removeListener(channel, subscription);
+    };
   },
   invoke(channel: string, ...args: unknown[]) {
     return ipcRenderer.invoke(channel, ...args)
