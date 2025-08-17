@@ -115,6 +115,10 @@ export class TrayWindow {
     this._window.on('show', callback);
   };
 
+  send = (channel: string, ...args: any[]) => {
+    this._window.webContents.send(channel, ...args);
+  };
+
   openDevTool = (options?: OpenDevToolsOptions) => {
     this._window.webContents.openDevTools(options);
   };
