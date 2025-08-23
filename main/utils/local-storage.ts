@@ -1,21 +1,21 @@
-import Store from 'electron-store';
+import Store from "electron-store";
 
 export class LocalStorage {
-  private _store: Store;
+	private _store: Store;
 
-  constructor (name: string) {
-    this._store = new Store({ name });
-  }
+	constructor(name: string) {
+		this._store = new Store({ name });
+	}
 
-  get<T = unknown> (key: string): T | undefined {
-    return this._store.get(key) as T;
-  }
+	get<T = unknown>(key: string): T | undefined {
+		return this._store.get(key) as T;
+	}
 
-  set (key: string, value: unknown) {
-    this._store.set(key, value);
-  }
+	set(key: string, value: unknown) {
+		this._store.set(key, value);
+	}
 
-  delete (key: string) {
-    this._store.delete(key);
-  }
+	delete(key: string) {
+		this._store.delete(key);
+	}
 }

@@ -1,45 +1,45 @@
-type GithubUserType = 'User' | 'Bot';
+type GithubUserType = "User" | "Bot";
 
 export interface GithubUser {
-  id: number;
-  login: string;
-  name: string;
-  type: GithubUserType;
+	id: number;
+	login: string;
+	name: string;
+	type: GithubUserType;
 }
 
 interface GithubLabel {
-  id: number;
-  name: string;
-  color: string;
+	id: number;
+	name: string;
+	color: string;
 }
 
 export interface GithubIssueItem {
-  id: number;
-  number: number;
-  title: string;
-  html_url: string;
-  repository_url: string;
-  pull_request: {url: string};
-  created_at: string;
-  labels: GithubLabel[];
-  user: GithubUser;
-  draft: boolean;
+	id: number;
+	number: number;
+	title: string;
+	html_url: string;
+	repository_url: string;
+	pull_request: { url: string };
+	created_at: string;
+	labels: GithubLabel[];
+	user: GithubUser;
+	draft: boolean;
 }
 
 export interface GithubSearch {
-  total_count: number;
-  items: GithubIssueItem[];
+	total_count: number;
+	items: GithubIssueItem[];
 }
 
-export type GitHubReviewState = 'PENDING' | 'APPROVED' | 'COMMENTED';
+export type GitHubReviewState = "PENDING" | "APPROVED" | "COMMENTED";
 
 export interface GithubReview {
-  state: GitHubReviewState;
-  user: GithubUser;
+	state: GitHubReviewState;
+	user: GithubUser;
 }
 
 export interface GithubPull {
-  url: string;
-  requested_reviewers: GithubUser[];
-  user: GithubUser;
+	url: string;
+	requested_reviewers: GithubUser[];
+	user: GithubUser;
 }

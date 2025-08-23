@@ -1,11 +1,9 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "plugins": [
-    "@typescript-eslint"
-  ],
-  "parser": "@typescript-eslint/parser"
+	"extends": [
+		"eslint:recommended",
+		"next/core-web-vitals",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"plugins": ["@typescript-eslint"],
+	"parser": "@typescript-eslint/parser"
 }
