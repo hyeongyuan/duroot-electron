@@ -4,8 +4,8 @@ import { ipcHandler } from "../utils/ipc";
 export const useStorage = <T>(
 	key: string,
 	initialValue?: T,
-): [T, (value: T) => Promise<void>] => {
-	const [value, setValue] = useState<T>(initialValue ?? null);
+): [T | null, (value: T) => Promise<void>] => {
+	const [value, setValue] = useState<T | null>(initialValue ?? null);
 
 	useEffect(() => {
 		ipcHandler.getStorage(key).then((storedValue) => {
@@ -18,7 +18,7 @@ export const useStorage = <T>(
 
 	const updateValue = async (newValue: T) => {
 		await ipcHandler.setStorage(key, newValue);
-		const storedValue = await ipcHandler.getStorage(key);
+		const storedValue = await ipcHandler.getStorage<T>(key);
 
 		setValue(storedValue);
 	};

@@ -14,8 +14,8 @@ export const createWindow = (
 	const name = `window-state-${windowName}`;
 	const store = new Store<Rectangle>({ name });
 	const defaultSize = {
-		width: options.width,
-		height: options.height,
+		width: options.width ?? 800,
+		height: options.height ?? 400,
 	};
 	let state = {};
 

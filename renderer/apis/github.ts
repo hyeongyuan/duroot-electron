@@ -89,15 +89,15 @@ export const fetchApprovedPullRequests = (token: string, login = SELF) => {
 export const fetchReviewCount = async (
 	token: string,
 	pullRequestUrl: string,
-	login: string,
+	login = SELF,
 ) => {
 	const [pullRequest, reviews] = await Promise.all([
 		fetchPullRequest(token, pullRequestUrl),
 		fetchPullRequestReviews(token, pullRequestUrl),
 	]);
 
-	const approvedUsers = [];
-	const totalUsers = [];
+	const approvedUsers: string[] = [];
+	const totalUsers: string[] = [];
 
 	for (const review of reviews) {
 		if (review.user.login === login || review.user.type === "Bot") {

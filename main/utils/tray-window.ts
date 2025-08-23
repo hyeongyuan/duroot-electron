@@ -15,6 +15,9 @@ type WindowState = WindowPosition & WindowSize;
 const isProd = process.env.NODE_ENV === "production";
 const storeKey = "window-state";
 
+const DEFAULT_WINDOW_WIDTH = 400;
+const DEFAULT_WINDOW_HEIGHT = 500;
+
 export class TrayWindow {
 	private _window: BrowserWindow;
 	private _windowState: WindowState;
@@ -28,8 +31,8 @@ export class TrayWindow {
 		const store = new Store<Rectangle>({ name: storeName });
 
 		const defaultSize: WindowSize = {
-			width: options.width,
-			height: options.height,
+			width: options.width ?? DEFAULT_WINDOW_WIDTH,
+			height: options.height ?? DEFAULT_WINDOW_HEIGHT,
 		};
 		const defaultPosition = this._getWindowPosition(defaultSize);
 

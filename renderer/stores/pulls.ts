@@ -13,7 +13,7 @@ interface PullsHideLabelsState {
 export const usePullsHideLabelsStore = create<PullsHideLabelsState>((set) => ({
 	data: [],
 	init: async () => {
-		const storedData = await ipcHandler.getStorage(KEY);
+		const storedData = await ipcHandler.getStorage<string[]>(KEY);
 		if (!storedData) {
 			return;
 		}
@@ -30,8 +30,8 @@ export const filterHideLabels = (
 	hideLabels: string[],
 ) => {
 	return (
-		items?.filter((item) =>
+		items.filter((item) =>
 			item.labels.every((label) => !hideLabels.includes(label.name)),
-		) || []
+		)
 	);
 };

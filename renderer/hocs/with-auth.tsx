@@ -20,7 +20,7 @@ export const withAuth = <P extends AuthProps>(
 			if (authData) {
 				return;
 			}
-			ipcHandler.getStorage("auth.token").then(async (token?: string) => {
+			ipcHandler.getStorage<string>("auth.token").then(async (token) => {
 				if (!token) {
 					router.replace("/auth");
 					return;

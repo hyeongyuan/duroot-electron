@@ -34,13 +34,13 @@ export function PullsListContainer() {
 		queryFn: async () => {
 			switch (tabQuery) {
 				case TabKey.MY_PULL_REQUESTS:
-					return queryMyPullRequests(data.token);
+					return queryMyPullRequests(data?.token ?? '');
 				case TabKey.REQUESTED_PULL_REQUESTS:
-					return queryRequestedPullRequests(data.token);
+					return queryRequestedPullRequests(data?.token ?? '');
 				case TabKey.REVIEWED_PULL_REQUESTS:
-					return queryReviewedPullRequests(data.token, data.user.login);
+					return queryReviewedPullRequests(data?.token ?? '', data?.user.login);
 				case TabKey.APPROVED_PULL_REQUESTS:
-					return queryApprovedPullRequests(data.token, data.user.login);
+					return queryApprovedPullRequests(data?.token ?? '', data?.user.login);
 			}
 		},
 		enabled: !!data,

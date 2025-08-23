@@ -8,7 +8,9 @@ interface AnchorProps extends React.HTMLProps<HTMLAnchorElement> {
 export function Anchor({ children, href, ...props }: AnchorProps) {
 	const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
 		event.preventDefault();
-
+		if (!href) {
+			return;
+		}
 		ipcHandler.openExternal(href);
 	};
 	return (
