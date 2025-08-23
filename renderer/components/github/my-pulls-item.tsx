@@ -51,7 +51,7 @@ export function MyPullsItem({
 		<li ref={targetRef} className="flex flex-col px-4 py-2">
 			<div className="flex items-center">
 				<Anchor
-					className="text-[#768390] text-xs leading-5 line-clamp-1 break-all hover:underline hover:underline-offset-1 pr-1"
+					className="line-clamp-1 break-all pr-1 text-[#768390] text-xs leading-5 hover:underline hover:underline-offset-1"
 					href={subtitleUrl}
 				>
 					{subtitle}
@@ -68,7 +68,7 @@ export function MyPullsItem({
 			</div>
 			<div className={labels.length > 0 ? "mb-1" : ""}>
 				<Anchor
-					className="font-medium text-sm hover:text-[#539bf5] leading-6 line-clamp-3 break-all"
+					className="line-clamp-3 break-all font-medium text-sm leading-6 hover:text-[#539bf5]"
 					href={titleUrl}
 				>
 					{title}
@@ -80,7 +80,7 @@ export function MyPullsItem({
 				))}
 			</span>
 			{caption && (
-				<p className="text-[#768390] text-[10px] leading-5 line-clamp-1 break-all mt-1">
+				<p className="mt-1 line-clamp-1 break-all text-[#768390] text-[10px] leading-5">
 					{caption}
 				</p>
 			)}

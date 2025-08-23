@@ -34,7 +34,7 @@ export function PullsItem({
 		<li className="flex flex-col px-4 py-2">
 			<div className="flex items-center">
 				<Anchor
-					className="text-[#768390] text-xs leading-5 line-clamp-1 break-all hover:underline hover:underline-offset-1 pr-1"
+					className="line-clamp-1 break-all pr-1 text-[#768390] text-xs leading-5 hover:underline hover:underline-offset-1"
 					href={subtitleUrl}
 					target="_blank"
 				>
@@ -43,7 +43,7 @@ export function PullsItem({
 			</div>
 			<div className={labels.length > 0 ? "mb-1" : ""}>
 				<Anchor
-					className="font-medium text-sm hover:text-[#539bf5] leading-6 line-clamp-3 break-all"
+					className="line-clamp-3 break-all font-medium text-sm leading-6 hover:text-[#539bf5]"
 					href={titleUrl}
 					target="_blank"
 				>
@@ -51,7 +51,7 @@ export function PullsItem({
 				</Anchor>
 			</div>
 			<span
-				className={`${labels.length > 0 ? "mb-1" : ""} flex flex-wrap space-x-1 gap-1`}
+				className={`${labels.length > 0 ? "mb-1" : ""} flex flex-wrap gap-1 space-x-1`}
 			>
 				{labels.map(({ name, color }) => (
 					<Label key={name} name={name} color={color} />
@@ -60,17 +60,17 @@ export function PullsItem({
 			<div className="flex items-center text-[#768390]">
 				<span className="flex items-center">
 					<img
-						className="w-4 h-4 rounded-full mr-2"
+						className="mr-2 h-4 w-4 rounded-full"
 						src={getProfileUrl(user.id, 32)}
 						alt="avatar"
 					/>
-					<p className="text-[#adbac7] text-[10px] font-medium leading-5 line-clamp-1 break-all">
+					<p className="line-clamp-1 break-all font-medium text-[#adbac7] text-[10px] leading-5">
 						{user.login}
 					</p>
 				</span>
 				<span className="mx-1">·</span>
 				<span>
-					<p className="text-[10px] font-medium leading-5 line-clamp-1 break-all">
+					<p className="line-clamp-1 break-all font-medium text-[10px] leading-5">
 						{formatDistanceToNow(new Date(createdAt))}
 					</p>
 				</span>

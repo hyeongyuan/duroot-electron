@@ -25,9 +25,9 @@ export default function SettingsPage() {
 		<div className="w-full">
 			<div
 				style={{ height: HEADER_HEIGHT }}
-				className="flex items-center bg-[#2d333b] border border-[#373e47] px-4"
+				className="flex items-center border border-[#373e47] bg-[#2d333b] px-4"
 			>
-				<div className="cursor-pointer mr-2" onClick={() => router.back()}>
+				<div className="mr-2 cursor-pointer" onClick={() => router.back()}>
 					<svg
 						width="20"
 						height="20"
@@ -49,7 +49,7 @@ export default function SettingsPage() {
 					<div className="m-2">
 						<h2 className="text-[11px]">VERSION</h2>
 					</div>
-					<div className="bg-[#2d333b] rounded-lg divide-y divide-[#373e47] overflow-hidden">
+					<div className="divide-y divide-[#373e47] overflow-hidden rounded-lg bg-[#2d333b]">
 						<div className="flex items-center justify-between px-4 py-2">
 							<span>Duroot</span>
 							<span className="text-[#768390]">v{version}</span>
@@ -58,7 +58,7 @@ export default function SettingsPage() {
 				</section>
 				<section className="px-6 pb-8">
 					<div
-						className="flex items-center justify-between bg-[#2d333b] rounded-lg px-4 py-2 cursor-pointer hover:bg-[#373e47] overflow-hidden"
+						className="flex cursor-pointer items-center justify-between overflow-hidden rounded-lg bg-[#2d333b] px-4 py-2 hover:bg-[#373e47]"
 						onClick={handleSignOut}
 					>
 						<span className="text-[#539BF5]">Sign out</span>

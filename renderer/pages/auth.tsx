@@ -58,12 +58,12 @@ export default function AuthPage() {
 								onChange={(event) => setInputValue(event.target.value)}
 							/>
 							{!!message && (
-								<p className="ml-1 mt-2 text-xs text-[#e5534b]">{message}</p>
+								<p className="mt-2 ml-1 text-[#e5534b] text-xs">{message}</p>
 							)}
 						</div>
 						<button
 							type="button"
-							className="bg-[#347d39] hover:bg-[#46954a] text-[#ffffff] text-sm rounded h-[32px] px-4 border border-[rgba(205,217,229,0.1)]"
+							className="h-[32px] rounded border border-[rgba(205,217,229,0.1)] bg-[#347d39] px-4 text-[#ffffff] text-sm hover:bg-[#46954a]"
 							onClick={handleSubmit}
 							disabled={!inputValue}
 						>
@@ -73,10 +73,10 @@ export default function AuthPage() {
 				</div>
 			</div>
 			<div>
-				<p className="text-xs text-center">
+				<p className="text-center text-xs">
 					Don't have a token?{" "}
 					<Anchor
-						className="text-[#4493f8] underline cursor-pointer"
+						className="cursor-pointer text-[#4493f8] underline"
 						href="https://github.com/settings/tokens"
 					>
 						Generate here

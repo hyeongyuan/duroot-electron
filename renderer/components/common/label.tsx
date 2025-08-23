@@ -8,7 +8,7 @@ interface LabelProps extends Label {}
 export function Label({ name, color }: LabelProps) {
 	return (
 		<span
-			className="text-xs leading-[18px] rounded-full px-[7px] border border-transparent"
+			className="rounded-full border border-transparent px-[7px] text-xs leading-[18px]"
 			style={{
 				backgroundColor: `#${color}2e`,
 				borderColor: `#${color}4d`,

@@ -7,9 +7,9 @@ interface SpinnerProps {
 export function Spinner({ show }: SpinnerProps) {
 	return (
 		<Portal id="portal-spinner" show={show}>
-			<div className="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
+			<div className="-translate-x-1/2 -translate-y-1/2 absolute top-2/4 left-1/2">
 				<svg
-					className="w-8 h-8 animate-spin text-gray-600 fill-gray-400"
+					className="h-8 w-8 animate-spin fill-gray-400 text-gray-600"
 					viewBox="0 0 100 101"
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"

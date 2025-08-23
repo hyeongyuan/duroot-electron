@@ -21,7 +21,11 @@
 		"rules": {
 			"recommended": true,
 			"a11y": {
+				"useKeyWithClickEvents": "warn",
 				"noSvgWithoutTitle": "off"
+			},
+			"nursery": {
+				"useSortedClasses": "error"
 			}
 		}
 	},

@@ -48,10 +48,10 @@ export function LabelsFilter({ data, onChange }: LabelsFilterProps) {
 						inset: "30px auto auto 0px",
 						position: "absolute",
 					}}
-					className="absolute z-10 bg-[#373e47] divide-y divide-gray-100 rounded-lg shadow-sm min-w-32 max-w-40 border border-[#444c56]"
+					className="absolute z-10 min-w-32 max-w-40 divide-y divide-gray-100 rounded-lg border border-[#444c56] bg-[#373e47] shadow-sm"
 				>
 					<ul
-						className="py-1 text-sm text-gray-700"
+						className="py-1 text-gray-700 text-sm"
 						aria-labelledby="dropdownDelayButton"
 					>
 						{data.map(({ name, checked }) => (
@@ -60,11 +60,11 @@ export function LabelsFilter({ data, onChange }: LabelsFilterProps) {
 								className="mx-1 cursor-pointer"
 								onClick={() => onChange?.({ name, checked: !checked })}
 							>
-								<div className="flex items-center p-1 hover:bg-[#3d444e] text-[#adbac7] hover:text-[#e6edf3] rounded-md">
-									<div className="w-4 h-4 mr-2 flex items-center">
+								<div className="flex items-center rounded-md p-1 text-[#adbac7] hover:bg-[#3d444e] hover:text-[#e6edf3]">
+									<div className="mr-2 flex h-4 w-4 items-center">
 										{checked ? <CheckIcon className="size-4" /> : null}
 									</div>
-									<span className="text-ellipsis overflow-hidden text-sm">
+									<span className="overflow-hidden text-ellipsis text-sm">
 										{name}
 									</span>
 								</div>

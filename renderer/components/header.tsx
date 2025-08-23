@@ -41,7 +41,7 @@ export function Header() {
 	return (
 		<div
 			style={{ height: `${HEADER_HEIGHT}px` }}
-			className="flex items-center justify-between bg-[#2d333b] border border-[#373e47] px-4"
+			className="flex items-center justify-between border border-[#373e47] bg-[#2d333b] px-4"
 		>
 			<div className="flex gap-4">
 				<a href="/pulls">

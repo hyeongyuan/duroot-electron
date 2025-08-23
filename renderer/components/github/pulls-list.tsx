@@ -109,7 +109,7 @@ export function PullsList() {
 
 		return (
 			<>
-				<div className="flex px-4 space-x-2 h-[26px]">
+				<div className="flex h-[26px] space-x-2 px-4">
 					<IconButton onClick={refetch}>
 						<ArrowPathIcon className="size-4" />
 					</IconButton>

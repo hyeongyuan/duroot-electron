@@ -10,7 +10,7 @@ export default function HomePage() {
 	const { setData: setAuthData } = useAuthStore();
 
 	useEffect(() => {
-		ipcHandler.getStorage("auth.token").then(async (token) => {
+		ipcHandler.getStorage("auth.token").then(async (token: string) => {
 			if (!token) {
 				router.replace("/auth");
 				return;

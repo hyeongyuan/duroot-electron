@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 	}, [init]);
 
 	return (
-		<div className="bg-[#22272e] text-[#adbac7] h-screen rounded-md overflow-hidden">
+		<div className="h-screen overflow-hidden rounded-md bg-[#22272e] text-[#adbac7]">
 			<QueryProvider>
 				<Component {...pageProps} />
 			</QueryProvider>

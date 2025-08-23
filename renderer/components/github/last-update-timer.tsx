@@ -18,7 +18,7 @@ export function LastUpdateTimer({ lastUpdatedAt }: LastUpdateTimerProps) {
 	}, []);
 
 	return (
-		<p className="text-[#768390] text-[10px] text-center">
+		<p className="text-center text-[#768390] text-[10px]">
 			{`Last update ${formatDistanceToNow(lastUpdatedAt)} ago`}
 		</p>
 	);
