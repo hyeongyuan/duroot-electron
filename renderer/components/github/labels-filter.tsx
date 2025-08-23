@@ -3,7 +3,7 @@ import CheckIcon from "@heroicons/react/24/solid/CheckIcon";
 import { useEffect, useRef, useState } from "react";
 import { IconButton } from "../common/icon-button";
 
-type LabelFilter = {
+export type LabelFilter = {
 	name: string;
 	checked: boolean;
 };

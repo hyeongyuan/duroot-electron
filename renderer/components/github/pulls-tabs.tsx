@@ -18,6 +18,7 @@ export enum TabKey {
 	REQUESTED_PULL_REQUESTS = "requestedPullRequests",
 	REVIEWED_PULL_REQUESTS = "reviewedPullRequests",
 	APPROVED_PULL_REQUESTS = "approvedPullRequests",
+	WATCHING_PULL_REQUESTS = "watchingPullRequests",
 }
 
 export function PullsTabs() {
@@ -53,6 +54,12 @@ export function PullsTabs() {
 				enabled: !!data,
 				refetchOnWindowFocus: false,
 			},
+			{
+				queryKey: ["pulls", TabKey.WATCHING_PULL_REQUESTS],
+				queryFn: () => Promise.resolve({ items: [] }),
+				enabled: !!data,
+				refetchOnWindowFocus: false,
+			}
 		],
 	});
 
@@ -81,6 +88,12 @@ export function PullsTabs() {
 			href: `/pulls?tab=${TabKey.APPROVED_PULL_REQUESTS}`,
 			count: filterHideLabels(approvedPulls.data?.items, hideLabels).length,
 		},
+		{
+			key: TabKey.WATCHING_PULL_REQUESTS,
+			name: "👀",
+			href: `/pulls?tab=${TabKey.WATCHING_PULL_REQUESTS}`,
+			count: 0,
+		}
 	];
 	const requestedPullsCount = tabs[1].count;
 
