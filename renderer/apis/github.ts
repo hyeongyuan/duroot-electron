@@ -99,9 +99,9 @@ export const fetchReviewCount = async (
 	const approvedUsers = [];
 	const totalUsers = [];
 
-	reviews.forEach((review) => {
+	for (const review of reviews) {
 		if (review.user.login === login || review.user.type === "Bot") {
-			return;
+			continue;
 		}
 		if (
 			review.state === "APPROVED" &&
@@ -112,10 +112,11 @@ export const fetchReviewCount = async (
 			approvedUsers.push(review.user.login);
 		}
 		totalUsers.push(review.user.login);
-	});
-	pullRequest.requested_reviewers.forEach((reviewer) => {
+	}
+
+	for (const reviewer of pullRequest.requested_reviewers) {
 		totalUsers.push(reviewer.login);
-	});
+	}
 
 	return {
 		approved: Array.from(new Set(approvedUsers)).length,

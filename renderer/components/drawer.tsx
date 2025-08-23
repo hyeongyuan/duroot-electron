@@ -11,12 +11,6 @@ interface DrawerProps {
 export function Drawer({ visible, onClose }: DrawerProps) {
 	const { data } = useAuthStore();
 
-	const handleClickQuit = (event: React.MouseEvent<HTMLAnchorElement>) => {
-		event.preventDefault();
-
-		ipcHandler.quit();
-	};
-
 	return (
 		<div
 			style={{
@@ -80,10 +74,10 @@ export function Drawer({ visible, onClose }: DrawerProps) {
 
 				<div className="border-t border-[#444c56] my-[6px]" />
 
-				<a
-					href="#"
-					onClick={handleClickQuit}
-					className="flex items-center py-1 px-2 hover:bg-[#444c56] rounded"
+				<button
+					type="button"
+					onClick={ipcHandler.quit}
+					className="flex items-center w-full py-1 px-2 hover:bg-[#444c56] rounded"
 				>
 					<span className="mr-2">
 						<svg
@@ -93,11 +87,11 @@ export function Drawer({ visible, onClose }: DrawerProps) {
 							height="16"
 							fill="#9198a1"
 						>
-							<path d="M2 2.75C2 1.784 2.784 1 3.75 1h2.5a.75.75 0 0 1 0 1.5h-2.5a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h2.5a.75.75 0 0 1 0 1.5h-2.5A1.75 1.75 0 0 1 2 13.25Zm10.44 4.5-1.97-1.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734l1.97-1.97H6.75a.75.75 0 0 1 0-1.5Z"></path>
+							<path d="M2 2.75C2 1.784 2.784 1 3.75 1h2.5a.75.75 0 0 1 0 1.5h-2.5a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h2.5a.75.75 0 0 1 0 1.5h-2.5A1.75 1.75 0 0 1 2 13.25Zm10.44 4.5-1.97-1.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734l1.97-1.97H6.75a.75.75 0 0 1 0-1.5Z" />
 						</svg>
 					</span>
 					<span className="text-sm text-[#e6edf3]">Quit</span>
-				</a>
+				</button>
 			</div>
 		</div>
 	);

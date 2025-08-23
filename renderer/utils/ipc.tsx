@@ -8,10 +8,10 @@ export const ipcHandler = {
 	openExternal: (url: string) => {
 		window.ipc.openExternal(url);
 	},
-	getStorage: async (key: string): Promise<any> => {
+	getStorage: async (key: string): Promise<unknown> => {
 		return await window.ipc.invoke("storage:get", key);
 	},
-	setStorage: async (key: string, value: any): Promise<void> => {
+	setStorage: async (key: string, value: unknown): Promise<void> => {
 		await window.ipc.invoke("storage:set", key, value);
 	},
 	deleteStorage: async (key: string): Promise<void> => {
