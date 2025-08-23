@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import Link from "next/link";
 
 export const TABS_HEIGHT = 44;
@@ -27,11 +28,16 @@ export function Tabs({ data, activeTab, shallowRouting }: TabsProps) {
 			{data.map(({ key, name, href, count }) => (
 				<li
 					key={key}
-					className={`py-2 ${activeTab === key ? "border-[#ec775c]" : "border-[transparent]"} inline-block border-b-2`}
+					className={clsx("inline-block border-b-2 py-2", {
+						"border-[#ec775c]": activeTab === key,
+						"border-[transparent]": activeTab !== key,
+					})}
 				>
 					<Link
 						href={href}
-						className={`cursor-pointer p-2 text-xs ${activeTab === key ? "text-[#e6edf3]" : ""} hover:text-[#e6edf3]`}
+						className={clsx("cursor-pointer p-2 text-xs hover:text-[#e6edf3]", {
+							"text-[#e6edf3]": activeTab === key,
+						})}
 						shallow={shallowRouting}
 					>
 						{name}

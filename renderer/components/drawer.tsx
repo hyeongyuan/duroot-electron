@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import Link from "next/link";
 import { useAuthStore } from "../stores/auth";
 import { ipcHandler } from "../utils/ipc";
@@ -16,7 +17,13 @@ export function Drawer({ visible, onClose }: DrawerProps) {
 			style={{
 				boxShadow: "0 8px 24px #1c2128",
 			}}
-			className={`fixed top-0 right-0 z-40 h-screen w-64 overflow-y-auto rounded-l-lg border border-[#444c56] bg-[#2d333b] transition-transform ${visible ? "transform-none" : "translate-x-full"}`}
+			className={clsx(
+				"fixed top-0 right-0 z-40 h-screen w-64 overflow-y-auto rounded-l-lg border border-[#444c56] bg-[#2d333b] transition-transform",
+				{
+					"transform-none": visible,
+					"translate-x-full": !visible,
+				},
+			)}
 		>
 			<div className="flex items-center px-4 pt-4">
 				<Avatar

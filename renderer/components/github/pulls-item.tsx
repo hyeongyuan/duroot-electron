@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { Anchor } from "../common/anchor";
 import { Label } from "../common/label";
@@ -51,7 +52,9 @@ export function PullsItem({
 				</Anchor>
 			</div>
 			<span
-				className={`${labels.length > 0 ? "mb-1" : ""} flex flex-wrap gap-1 space-x-1`}
+				className={clsx("flex flex-wrap gap-1 space-x-1", {
+					"mb-1": labels.length > 0,
+				})}
 			>
 				{labels.map(({ name, color }) => (
 					<Label key={name} name={name} color={color} />

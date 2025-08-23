@@ -1,6 +1,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import clsx from "clsx";
 import { useAuthStore } from "../stores/auth";
 import { Avatar } from "./common/avatar";
 import { Drawer } from "./drawer";
@@ -45,7 +46,11 @@ export function Header() {
 		>
 			<div className="flex gap-4">
 				<a href="/pulls">
-					<h1 className={`${pathname === "/pulls/" ? "text-[#e6edf3]" : ""}`}>
+					<h1
+						className={clsx({
+							"text-[#e6edf3]": pathname === "/pulls"
+						})}
+					>
 						Pulls
 					</h1>
 				</a>
