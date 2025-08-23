@@ -32,25 +32,27 @@ export function PullsTabs() {
 		queries: [
 			{
 				queryKey: ["pulls", TabKey.MY_PULL_REQUESTS],
-				queryFn: () => queryMyPullRequests(data?.token ?? ''),
+				queryFn: () => queryMyPullRequests(data?.token ?? ""),
 				enabled: !!data,
 				refetchOnWindowFocus: false,
 			},
 			{
 				queryKey: ["pulls", TabKey.REQUESTED_PULL_REQUESTS],
-				queryFn: () => queryRequestedPullRequests(data?.token ?? ''),
+				queryFn: () => queryRequestedPullRequests(data?.token ?? ""),
 				enabled: !!data,
 				refetchOnWindowFocus: false,
 			},
 			{
 				queryKey: ["pulls", TabKey.REVIEWED_PULL_REQUESTS],
-				queryFn: () => queryReviewedPullRequests(data?.token ?? '', data?.user.login ?? ''),
+				queryFn: () =>
+					queryReviewedPullRequests(data?.token ?? "", data?.user.login ?? ""),
 				enabled: !!data,
 				refetchOnWindowFocus: false,
 			},
 			{
 				queryKey: ["pulls", TabKey.APPROVED_PULL_REQUESTS],
-				queryFn: () => queryApprovedPullRequests(data?.token ?? '', data?.user.login ?? ''),
+				queryFn: () =>
+					queryApprovedPullRequests(data?.token ?? "", data?.user.login ?? ""),
 				enabled: !!data,
 				refetchOnWindowFocus: false,
 			},
@@ -59,7 +61,7 @@ export function PullsTabs() {
 				queryFn: () => Promise.resolve({ items: [] }),
 				enabled: !!data,
 				refetchOnWindowFocus: false,
-			}
+			},
 		],
 	});
 
@@ -74,26 +76,29 @@ export function PullsTabs() {
 			key: TabKey.REQUESTED_PULL_REQUESTS,
 			name: "Requested",
 			href: `/pulls?tab=${TabKey.REQUESTED_PULL_REQUESTS}`,
-			count: filterHideLabels(requestedPulls.data?.items ?? [], hideLabels).length,
+			count: filterHideLabels(requestedPulls.data?.items ?? [], hideLabels)
+				.length,
 		},
 		{
 			key: TabKey.REVIEWED_PULL_REQUESTS,
 			name: "Reviewed",
 			href: `/pulls?tab=${TabKey.REVIEWED_PULL_REQUESTS}`,
-			count: filterHideLabels(reviewedPulls.data?.items ?? [], hideLabels).length,
+			count: filterHideLabels(reviewedPulls.data?.items ?? [], hideLabels)
+				.length,
 		},
 		{
 			key: TabKey.APPROVED_PULL_REQUESTS,
 			name: "Approved",
 			href: `/pulls?tab=${TabKey.APPROVED_PULL_REQUESTS}`,
-			count: filterHideLabels(approvedPulls.data?.items ?? [], hideLabels).length,
+			count: filterHideLabels(approvedPulls.data?.items ?? [], hideLabels)
+				.length,
 		},
 		{
 			key: TabKey.WATCHING_PULL_REQUESTS,
 			name: "👀",
 			href: `/pulls?tab=${TabKey.WATCHING_PULL_REQUESTS}`,
 			count: 0,
-		}
+		},
 	];
 	const requestedPullsCount = tabs[1]?.count ?? 0;
 

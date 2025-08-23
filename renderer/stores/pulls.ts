@@ -29,9 +29,7 @@ export const filterHideLabels = (
 	items: GithubIssueItem[],
 	hideLabels: string[],
 ) => {
-	return (
-		items.filter((item) =>
-			item.labels.every((label) => !hideLabels.includes(label.name)),
-		)
+	return items.filter((item) =>
+		item.labels.every((label) => !hideLabels.includes(label.name)),
 	);
 };

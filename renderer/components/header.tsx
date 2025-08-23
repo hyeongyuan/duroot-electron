@@ -48,7 +48,7 @@ export function Header() {
 				<a href="/pulls">
 					<h1
 						className={clsx({
-							"text-[#e6edf3]": pathname === "/pulls"
+							"text-[#e6edf3]": pathname === "/pulls",
 						})}
 					>
 						Pulls

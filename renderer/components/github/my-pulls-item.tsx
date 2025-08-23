@@ -41,7 +41,7 @@ export function MyPullsItem({
 	const { data: reviewCount } = useQuery({
 		queryKey: ["my-pulls", pullRequestUrl, data?.user.login],
 		queryFn: () =>
-			fetchReviewCount(data?.token ?? '', pullRequestUrl, data?.user.login),
+			fetchReviewCount(data?.token ?? "", pullRequestUrl, data?.user.login),
 		enabled: !!data && hasIntersected,
 	});
 
