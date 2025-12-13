@@ -60,7 +60,7 @@ export function PullsListContainer() {
 
 	useEffect(() => {
 		if (isAuthorizedError(error)) {
-			ipcHandler.deleteStorage("auth.token").then(() => {
+			ipcHandler.deleteStorage("github.auth").then(() => {
 				router.replace("/auth");
 			});
 		}

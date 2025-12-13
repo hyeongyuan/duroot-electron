@@ -14,7 +14,7 @@ export default function SettingsPage() {
 	}, []);
 
 	const handleSignOut = async () => {
-		await ipcHandler.deleteStorage("auth.token");
+		await ipcHandler.deleteStorage("github.auth");
 
 		setAuthData(null);
 

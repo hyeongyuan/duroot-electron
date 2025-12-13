@@ -14,3 +14,6 @@ dist
 
 # etc
 .DS_Store
+
+# local env files
+.env.local

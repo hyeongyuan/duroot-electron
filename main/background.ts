@@ -1,13 +1,25 @@
+import dotenv from "dotenv";
+dotenv.config({ path: ['.env.local', '.env'] });
+
 import path from "node:path";
 import { app, ipcMain } from "electron";
 import serve from "electron-serve";
 import { createTray } from "./helpers";
 import { AppUpdater } from "./utils/app-updater";
+import { Authwindow } from "./utils/auth-window";
 import { LocalStorage } from "./utils/local-storage";
 import { TrayWindow } from "./utils/tray-window";
 
 const isProd = process.env.NODE_ENV === "production";
 const isMac = process.platform === "darwin";
+
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('duroot', process.execPath, [path.resolve(process.argv[1])])
+  }
+} else {
+  app.setAsDefaultProtocolClient('duroot')
+}
 
 if (isProd) {
 	serve({ directory: "app" });
@@ -68,9 +80,18 @@ if (isProd) {
 		window.setTrayIcon(iconName);
 	});
 
-	window.onShow(() => {
-		appUpdater.checkForUpdates();
-	});
+  ipcMain.handle("github-auth", async () => {
+    const authWindow = new Authwindow();
+    authWindow.load((data) => {
+      storage.set("github.auth", data);
+
+      window.show();
+    });
+  });
+
+  window.onShow(() => {
+    appUpdater.checkForUpdates();
+  });
 })();
 
 app.on("window-all-closed", () => {

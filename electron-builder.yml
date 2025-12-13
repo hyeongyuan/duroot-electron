@@ -18,3 +18,7 @@ publish:
   - provider: github
     owner: hyeongyuan
     repo: duroot-electron
+protocols:
+  - name: Duroot
+    schemes:
+      - duroot

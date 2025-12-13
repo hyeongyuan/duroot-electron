@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { fetchUser } from "../apis/github";
 import { useAuthStore } from "../stores/auth";
-import type { GithubUser } from "../types/github";
+import type { GithubAccessToken, GithubUser } from "../types/github";
 import { ipcHandler } from "../utils/ipc";
 
 export interface AuthProps {
@@ -20,11 +20,12 @@ export const withAuth = <P extends AuthProps>(
 			if (authData) {
 				return;
 			}
-			ipcHandler.getStorage<string>("auth.token").then(async (token) => {
-				if (!token) {
+			ipcHandler.getStorage<GithubAccessToken>("github.auth").then(async (data) => {
+				if (!data) {
 					router.replace("/auth");
 					return;
 				}
+				const { access_token: token } = data;
 				try {
 					const user = await fetchUser(token);
 
