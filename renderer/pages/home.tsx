@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import { fetchUser } from "../apis/github";
 import { useAuthStore } from "../stores/auth";
+import type { GithubAccessToken } from "../types/github";
 import { ipcHandler } from "../utils/ipc";
 
 export default function HomePage() {
@@ -10,11 +11,12 @@ export default function HomePage() {
 	const { setData: setAuthData } = useAuthStore();
 
 	useEffect(() => {
-		ipcHandler.getStorage<string>("auth.token").then(async (token) => {
-			if (!token) {
+		ipcHandler.getStorage<GithubAccessToken>("github.auth").then(async (data) => {
+			if (!data) {
 				router.replace("/auth");
 				return;
 			}
+			const { access_token: token } = data;
 			try {
 				const user = await fetchUser(token);
 
@@ -22,7 +24,7 @@ export default function HomePage() {
 
 				router.replace("/pulls");
 			} catch (error) {
-				await ipcHandler.deleteStorage("auth.token");
+				await ipcHandler.deleteStorage("github.auth");
 
 				router.replace("/auth");
 			}

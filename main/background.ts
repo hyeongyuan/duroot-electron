@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config({ path: ['.env.local', '.env'] });
+
 import path from "node:path";
 import { app, ipcMain } from "electron";
 import serve from "electron-serve";
@@ -76,6 +79,15 @@ if (isProd) {
 	ipcMain.handle("set-tray-icon", (_event, iconName) => {
 		window.setTrayIcon(iconName);
 	});
+
+  ipcMain.handle("github-auth", async () => {
+    const authWindow = new Authwindow();
+    authWindow.load((data) => {
+      storage.set("github.auth", data);
+
+      window.show();
+    });
+  });
 
   window.onShow(() => {
     appUpdater.checkForUpdates();

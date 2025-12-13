@@ -32,6 +32,11 @@ jobs:
           mkdir -p ~/private_keys/
           echo '${{ secrets.APPLE_API_KEY }}' > ~/private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
 
+      - name: Inject environment variables
+        run: |
+          echo "DUROOT_CLIENT_ID=${{ secrets.DUROOT_CLIENT_ID }}" >> .env
+          echo "DUROOT_CLIENT_SECRET=${{ secrets.DUROOT_CLIENT_SECRET }}" >> .env
+
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
