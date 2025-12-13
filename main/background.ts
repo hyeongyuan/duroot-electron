@@ -1,7 +1,5 @@
-import dotenv from "dotenv";
-dotenv.config({ path: ['.env.local', '.env'] });
-
 import path from "node:path";
+import dotenv from "dotenv";
 import { app, ipcMain } from "electron";
 import serve from "electron-serve";
 import { createTray } from "./helpers";
@@ -22,8 +20,12 @@ if (process.defaultApp) {
 }
 
 if (isProd) {
+	dotenv.config({
+		path: path.join(process.resourcesPath, '.env'),
+	});
 	serve({ directory: "app" });
 } else {
+	dotenv.config({ path: ['.env.local']});
 	app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 (async () => {

@@ -14,6 +14,8 @@ extraResources:
     to: assets
     filter:
       - '**/*'
+  - from: '.env'
+    to: '.'
 publish:
   - provider: github
     owner: hyeongyuan
