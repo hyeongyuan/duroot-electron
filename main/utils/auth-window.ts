@@ -19,7 +19,7 @@ export class Authwindow {
   private _options = {
     client_id: process.env.DUROOT_CLIENT_ID || '',
     client_secret: process.env.DUROOT_CLIENT_SECRET || '',
-    scopes: ['user', 'repo', 'notifications'],
+    scopes: ['user', 'repo'],
   };
 
   private _authorizeUrl = `${GITHUB_AUTHORIZE_URL}?client_id=${this._options.client_id}&scope=${this._options.scopes}`;
