@@ -130,6 +130,7 @@ export function PullsList() {
                 titleUrl={pull.html_url}
                 subtitle={ownerRepo}
                 subtitleUrl={`https://github.com/${ownerRepo}`}
+                pullRequestUrl={pull.pull_request.url}
                 labels={labels}
                 user={{
                   id: pull.user.id,
