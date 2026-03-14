@@ -37,6 +37,16 @@ const fetchPullRequest = async (token: string, pullRequestUrl: string) => {
   return data;
 };
 
+export const fetchPullRequestChanges = async (token: string, pullRequestUrl: string) => {
+  const pullRequest = await fetchPullRequest(token, pullRequestUrl);
+
+  return {
+    additions: pullRequest.additions,
+    deletions: pullRequest.deletions,
+    changedFiles: pullRequest.changed_files,
+  };
+};
+
 export const fetchPullRequestsBy = (token: string, author = SELF) => {
   const query = `type:pr state:open author:${author}`;
   return searchIssues(token, query);

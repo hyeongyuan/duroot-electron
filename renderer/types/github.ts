@@ -42,4 +42,7 @@ export interface GithubPull {
   url: string;
   requested_reviewers: GithubUser[];
   user: GithubUser;
+  additions: number;
+  deletions: number;
+  changed_files: number;
 }
