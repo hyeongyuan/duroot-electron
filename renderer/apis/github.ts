@@ -47,6 +47,29 @@ export const fetchPullRequestChanges = async (token: string, pullRequestUrl: str
   };
 };
 
+const getReviewCount = (pullRequest: GithubPull, reviews: GithubReview[], login: string) => {
+  const approvedUsers = [];
+  const totalUsers = [];
+
+  reviews.forEach(review => {
+    if (review.user.login === login || review.user.type === 'Bot') {
+      return;
+    }
+    if (review.state === 'APPROVED' && pullRequest.requested_reviewers.every(reviewer => reviewer.login !== review.user.login)) {
+      approvedUsers.push(review.user.login);
+    }
+    totalUsers.push(review.user.login);
+  });
+  pullRequest.requested_reviewers.forEach(reviewer => {
+    totalUsers.push(reviewer.login);
+  });
+
+  return {
+    approved: Array.from(new Set(approvedUsers)).length,
+    total: Array.from(new Set(totalUsers)).length,
+  };
+};
+
 export const fetchPullRequestsBy = (token: string, author = SELF) => {
   const query = `type:pr state:open author:${author}`;
   return searchIssues(token, query);
@@ -82,25 +105,22 @@ export const fetchReviewCount = async (token: string, pullRequestUrl: string, lo
     fetchPullRequestReviews(token, pullRequestUrl),
   ]);
 
-  const approvedUsers = [];
-  const totalUsers = [];
+  return getReviewCount(pullRequest, reviews, login);
+};
 
-  reviews.forEach(review => {
-    if (review.user.login === login || review.user.type === 'Bot') {
-      return;
-    }
-    if (review.state === 'APPROVED' && pullRequest.requested_reviewers.every(reviewer => reviewer.login !== review.user.login)) {
-      approvedUsers.push(review.user.login);
-    }
-    totalUsers.push(review.user.login);
-  });
-  pullRequest.requested_reviewers.forEach(reviewer => {
-    totalUsers.push(reviewer.login);
-  });
+export const fetchMyPullRequestMeta = async (token: string, pullRequestUrl: string, login: string) => {
+  const [pullRequest, reviews] = await Promise.all([
+    fetchPullRequest(token, pullRequestUrl),
+    fetchPullRequestReviews(token, pullRequestUrl),
+  ]);
 
   return {
-    approved: Array.from(new Set(approvedUsers)).length,
-    total: Array.from(new Set(totalUsers)).length,
+    reviewCount: getReviewCount(pullRequest, reviews, login),
+    changes: {
+      additions: pullRequest.additions,
+      deletions: pullRequest.deletions,
+      changedFiles: pullRequest.changed_files,
+    },
   };
 };
 

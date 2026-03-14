@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchReviewCount } from '../../apis/github';
+import { fetchMyPullRequestMeta } from '../../apis/github';
 import { useIntersectionObserver } from '../../hooks/use-intersection-observer';
 import { useAuthStore } from '../../stores/auth';
 import { Anchor } from '../common/anchor';
 import { ApprovedMark } from '../common/approved-mark';
 import { Label } from '../common/label';
+import { PullChanges } from './pull-changes';
 
 interface MyPullsItemProps {
   title: string;
@@ -29,11 +30,14 @@ export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pu
     triggerOnce: true,
   });
 
-  const { data: reviewCount } = useQuery({
-    queryKey: ['my-pulls', pullRequestUrl, data.user.login],
-    queryFn: () => fetchReviewCount(data.token, pullRequestUrl, data.user.login),
+  const { data: meta } = useQuery({
+    queryKey: ['my-pull-meta', pullRequestUrl, data?.user.login],
+    queryFn: () => fetchMyPullRequestMeta(data!.token, pullRequestUrl, data!.user.login),
     enabled: !!data && hasIntersected,
   });
+
+  const reviewCount = meta?.reviewCount;
+  const changes = meta?.changes;
 
   const allApproved = reviewCount && reviewCount.approved === reviewCount.total;
 
@@ -67,10 +71,13 @@ export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pu
           <Label key={name} name={name} color={color} />
         ))}
       </span>
-      {caption && (
-        <p className="text-[#768390] text-[10px] leading-5 line-clamp-1 break-all mt-1">
-          {caption}
-        </p>
+      {(caption || changes) && (
+        <div className="mt-1 flex items-center justify-between gap-2 text-[#768390]">
+          <p className="min-w-0 text-[10px] leading-5 line-clamp-1 break-all">
+            {caption}
+          </p>
+          {changes ? <PullChanges additions={changes.additions} deletions={changes.deletions} /> : null}
+        </div>
       )}
     </li>
   );
