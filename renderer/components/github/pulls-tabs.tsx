@@ -1,11 +1,9 @@
-
 import { useQueries } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-
 import { useEffect } from 'react';
 import { queryApprovedPullRequests, queryMyPullRequests, queryRequestedPullRequests, queryReviewedPullRequests } from '../../queries/github';
 import { useAuthStore } from '../../stores/auth';
-import { filterHideLabels, usePullsHideLabelsStore } from '../../stores/pulls';
+import { filterVisibleLabels, usePullsVisibleLabelsStore } from '../../stores/pulls';
 import { ipcHandler } from '../../utils/ipc';
 import { type Tab, Tabs } from '../common/tabs';
 
@@ -20,7 +18,7 @@ export function  PullsTabs() {
   const searchParams = useSearchParams();
   const tabQuery = (searchParams.get('tab') || TabKey.MY_PULL_REQUESTS)as TabKey;
   const { data } = useAuthStore();
-  const { data: hideLabels } = usePullsHideLabelsStore();
+  const { get } = usePullsVisibleLabelsStore();
 
   const [myPulls, requestedPulls, reviewedPulls, approvedPulls] = useQueries({ queries: [
     {
@@ -54,25 +52,25 @@ export function  PullsTabs() {
       key: TabKey.MY_PULL_REQUESTS,
       name: 'My',
       href: `/pulls?tab=${TabKey.MY_PULL_REQUESTS}`,
-      count: filterHideLabels(myPulls.data?.items, hideLabels).length,
+      count: filterVisibleLabels(myPulls.data?.items, get(TabKey.MY_PULL_REQUESTS)).length,
     },
     {
       key: TabKey.REQUESTED_PULL_REQUESTS,
       name: 'Requested',
       href: `/pulls?tab=${TabKey.REQUESTED_PULL_REQUESTS}`,
-      count: filterHideLabels(requestedPulls.data?.items, hideLabels).length,
+      count: filterVisibleLabels(requestedPulls.data?.items, get(TabKey.REQUESTED_PULL_REQUESTS)).length,
     },
     {
       key: TabKey.REVIEWED_PULL_REQUESTS,
       name: 'Reviewed',
       href: `/pulls?tab=${TabKey.REVIEWED_PULL_REQUESTS}`,
-      count: filterHideLabels(reviewedPulls.data?.items, hideLabels).length,
+      count: filterVisibleLabels(reviewedPulls.data?.items, get(TabKey.REVIEWED_PULL_REQUESTS)).length,
     },
     {
       key: TabKey.APPROVED_PULL_REQUESTS,
       name: 'Approved',
       href: `/pulls?tab=${TabKey.APPROVED_PULL_REQUESTS}`,
-      count: filterHideLabels(approvedPulls.data?.items, hideLabels).length,
+      count: filterVisibleLabels(approvedPulls.data?.items, get(TabKey.APPROVED_PULL_REQUESTS)).length,
     }
   ];
   const requestedPullsCount = tabs[1].count;

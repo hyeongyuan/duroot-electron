@@ -6,14 +6,14 @@ import { useCallback, useEffect } from 'react';
 import { isAuthorizedError } from '../../apis/github';
 import { queryApprovedPullRequests, queryMyPullRequests, queryRequestedPullRequests, queryReviewedPullRequests } from '../../queries/github';
 import { useAuthStore } from '../../stores/auth';
-import { filterHideLabels, usePullsHideLabelsStore } from '../../stores/pulls';
+import { filterVisibleLabels, usePullsVisibleLabelsStore } from '../../stores/pulls';
 import { ipcHandler } from '../../utils/ipc';
 import { IconButton } from '../common/icon-button';
 import { Spinner } from '../common/spinner';
 import { TABS_HEIGHT } from "../common/tabs";
 import { HEADER_HEIGHT } from "../header";
 import { Empty } from './empty';
-import { LabelsFilter } from './labels-filter';
+import { ChipsFilter } from './chips-filter';
 import { LastUpdateTimer } from './last-update-timer';
 import { MyPullsItem } from './my-pulls-item';
 import { PullsItem } from './pulls-item';
@@ -27,7 +27,8 @@ export function PullsList() {
   const router = useRouter();
   const tabQuery = (searchParams.get('tab') || TabKey.MY_PULL_REQUESTS)as TabKey;
   const { data } = useAuthStore();
-  const { data: hideLabels, set: setHideLabels } = usePullsHideLabelsStore();
+  const { get, set } = usePullsVisibleLabelsStore();
+  const visibleLabels = get(tabQuery);
 
   const { data: pulls, isLoading, isRefetching, error, refetch } = useQuery({
     queryKey: ['pulls', tabQuery],
@@ -56,12 +57,16 @@ export function PullsList() {
   }, [error, router]);
 
 
-  const onChangeLabelFilter = (label: { name: string; checked: boolean }) => {
-    const newHideLabels = label.checked
-      ? hideLabels.filter(item => item !== label.name)
-      : [...hideLabels, label.name];
+  const onChangeLabelFilter = (chip: { name: string; checked: boolean }) => {
+    const newVisibleLabels = chip.checked
+      ? [...visibleLabels, chip.name]
+      : visibleLabels.filter(item => item !== chip.name);
 
-    setHideLabels(newHideLabels);
+    set(tabQuery, newVisibleLabels);
+  };
+
+  const onResetLabelFilter = () => {
+    set(tabQuery, []);
   };
 
   const renderList = useCallback(() => {
@@ -74,12 +79,12 @@ export function PullsList() {
     
     const uniqueLabels = pulls.items
       .flatMap(pull => pull.labels.map(label => label.name))
-      .filter((label, index, self) => self.indexOf(label) === index)
-    const labelFilters = uniqueLabels.map(label => ({
+      .filter((label, index, self) => self.indexOf(label) === index);
+    const chipFilters = uniqueLabels.map(label => ({
       name: label,
-      checked: !hideLabels.includes(label),
+      checked: visibleLabels.includes(label),
     }));
-    const filteredPulls = filterHideLabels(pulls.items, hideLabels);
+    const filteredPulls = filterVisibleLabels(pulls.items, visibleLabels);
 
     const handleClickOpenAll = () => {
       if (!pulls) {
@@ -98,7 +103,13 @@ export function PullsList() {
           <IconButton onClick={handleClickOpenAll} tooltip='Open all'>
             <ArrowTopRightOnSquareIcon className="size-4" />
           </IconButton>
-          <LabelsFilter data={labelFilters} onChange={onChangeLabelFilter} />
+        </div>
+        <div className="mt-3">
+          <ChipsFilter
+            data={chipFilters}
+            onChange={onChangeLabelFilter}
+            onReset={onResetLabelFilter}
+          />
         </div>
         <ul className="divide-y divide-[#373e47]">
           {filteredPulls.map((pull => {
@@ -143,7 +154,7 @@ export function PullsList() {
         </ul>
       </>
     )
-  }, [pulls, refetch, hideLabels]);
+  }, [pulls, refetch, tabQuery, visibleLabels]);
 
   return (
     <div style={{ height: `${WINDOW_HEIGHT - HEADER_SECTION_HEIGHT}px` }} className="overflow-y-auto">

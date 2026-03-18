@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 
 import { QueryProvider } from '../providers/query-provider';
 
-import { usePullsHideLabelsStore } from '../stores/pulls';
+import { usePullsVisibleLabelsStore } from '../stores/pulls';
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { init } = usePullsHideLabelsStore();
+  const { init } = usePullsVisibleLabelsStore();
 
   useEffect(() => {
     init();
