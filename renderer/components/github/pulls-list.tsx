@@ -2,14 +2,13 @@ import { ArrowPathIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/so
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { isAuthorizedError } from '../../apis/github';
 import { buildPullsQueryKey, queryPullsByTab } from '../../queries/github';
 import { useAuthStore } from '../../stores/auth';
 import { filterVisibleLabels, usePullsVisibleLabelsStore } from '../../stores/pulls';
 import { ipcHandler } from '../../utils/ipc';
 import { IconButton } from '../common/icon-button';
-import { Spinner } from '../common/spinner';
 import { TABS_HEIGHT } from "../common/tabs";
 import { HEADER_HEIGHT } from "../header";
 import { Empty } from './empty';
@@ -17,6 +16,7 @@ import { ChipsFilter } from './chips-filter';
 import { LastUpdateTimer } from './last-update-timer';
 import { MyPullsItem } from './my-pulls-item';
 import { PullsItem } from './pulls-item';
+import { PullsListSkeleton } from './pulls-list-skeleton';
 import { TabKey } from './pulls-tabs';
 
 const WINDOW_HEIGHT = 500;
@@ -58,41 +58,45 @@ export function PullsList() {
     set(tabQuery, []);
   };
 
-  const renderList = useCallback(() => {
-    if (!pulls) {
-      return null;
-    }
-    if (pulls.items.length === 0) {
-      return <Empty />;
-    }
-    
-    const uniqueLabels = pulls.items
-      .flatMap(pull => pull.labels.map(label => label.name))
-      .filter((label, index, self) => self.indexOf(label) === index);
-    const chipFilters = uniqueLabels.map(label => ({
-      name: label,
-      checked: visibleLabels.includes(label),
-    }));
-    const filteredPulls = filterVisibleLabels(pulls.items, visibleLabels);
+  const uniqueLabels = pulls?.items
+    .flatMap(pull => pull.labels.map(label => label.name))
+    .filter((label, index, self) => self.indexOf(label) === index) || [];
+  const chipFilters = uniqueLabels.map(label => ({
+    name: label,
+    checked: visibleLabels.includes(label),
+  }));
+  const filteredPulls = filterVisibleLabels(pulls?.items, visibleLabels);
 
-    const handleClickOpenAll = () => {
-      if (!pulls) {
-        return;
-      }
-      const urls = filteredPulls.map(item => item.html_url);
-      urls.forEach(url => ipcHandler.openExternal(url));
-    };
+  const handleClickOpenAll = () => {
+    const urls = filteredPulls.map(item => item.html_url);
+    urls.forEach(url => ipcHandler.openExternal(url));
+  };
 
-    return (
-      <>
-        <div className="flex px-4 space-x-2 h-[26px]">
-          <IconButton onClick={refetch}>
-            <ArrowPathIcon className="size-4" />
-          </IconButton>
+  const showInitialLoading = isLoading && !pulls;
+  const showNoData = !!pulls && pulls.items.length === 0;
+  const showFilteredEmpty = !!pulls && pulls.items.length > 0 && filteredPulls.length === 0;
+
+  return (
+    <div style={{ height: `${WINDOW_HEIGHT - HEADER_SECTION_HEIGHT}px` }} className="overflow-y-auto">
+      <div className="py-2">
+        <LastUpdateTimer lastUpdatedAt={pulls?.lastUpdatedAt} />
+      </div>
+      <div className="flex items-center justify-between px-4 h-[26px]">
+        <div className="flex space-x-2">
           <IconButton onClick={handleClickOpenAll} tooltip='Open all'>
             <ArrowTopRightOnSquareIcon className="size-4" />
           </IconButton>
+          <IconButton onClick={refetch} tooltip='Refresh tab'>
+            <ArrowPathIcon className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
+          </IconButton>
         </div>
+        {isRefetching ? (
+          <p className="text-[10px] text-[#768390]" aria-live="polite">
+            Refreshing...
+          </p>
+        ) : null}
+      </div>
+      {!showInitialLoading ? (
         <div className="mt-3">
           <ChipsFilter
             data={chipFilters}
@@ -100,7 +104,24 @@ export function PullsList() {
             onReset={onResetLabelFilter}
           />
         </div>
-        <ul className="divide-y divide-[#373e47]">
+      ) : null}
+      {showInitialLoading ? <PullsListSkeleton /> : null}
+      {showNoData ? (
+        <Empty
+          title="No pull requests"
+          description="There are no pull requests to show in this tab yet."
+        />
+      ) : null}
+      {showFilteredEmpty ? (
+        <Empty
+          title="No pull requests match this filter"
+          description="Try removing one or more chips to see more pull requests."
+          actionLabel="Clear filters"
+          onAction={onResetLabelFilter}
+        />
+      ) : null}
+      {!showInitialLoading && !showNoData && !showFilteredEmpty ? (
+        <ul className="divide-y divide-[#373e47]" aria-busy={isRefetching}>
           {filteredPulls.map((pull => {
             const [repo, owner] = pull.repository_url.split('/').reverse();
             const ownerRepo = `${owner}/${repo}`;
@@ -141,17 +162,7 @@ export function PullsList() {
             );
           }))}
         </ul>
-      </>
-    )
-  }, [pulls, refetch, tabQuery, visibleLabels]);
-
-  return (
-    <div style={{ height: `${WINDOW_HEIGHT - HEADER_SECTION_HEIGHT}px` }} className="overflow-y-auto">
-      <div className="py-2">
-        <LastUpdateTimer lastUpdatedAt={pulls?.lastUpdatedAt ?? new Date()} />
-      </div>
-      {renderList()}
-      <Spinner show={isLoading || isRefetching} />
+      ) : null}
     </div>
   );
 }
