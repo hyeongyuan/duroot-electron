@@ -1,7 +1,7 @@
-import { useQueries } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
-import { queryApprovedPullRequests, queryMyPullRequests, queryRequestedPullRequests, queryReviewedPullRequests } from '../../queries/github';
+import { buildPullsQueryKey, queryPullsByTab } from '../../queries/github';
 import { useAuthStore } from '../../stores/auth';
 import { filterVisibleLabels, usePullsVisibleLabelsStore } from '../../stores/pulls';
 import { ipcHandler } from '../../utils/ipc';
@@ -19,58 +19,46 @@ export function  PullsTabs() {
   const tabQuery = (searchParams.get('tab') || TabKey.MY_PULL_REQUESTS)as TabKey;
   const { data } = useAuthStore();
   const { get } = usePullsVisibleLabelsStore();
+  const queryClient = useQueryClient();
 
-  const [myPulls, requestedPulls, reviewedPulls, approvedPulls] = useQueries({ queries: [
-    {
-      queryKey: ['pulls', TabKey.MY_PULL_REQUESTS],
-      queryFn: () => queryMyPullRequests(data.token!),
-      enabled: !!data,
-      refetchOnWindowFocus: false,
-    },
-    {
-      queryKey: ['pulls', TabKey.REQUESTED_PULL_REQUESTS],
-      queryFn: () => queryRequestedPullRequests(data.token!),
-      enabled: !!data,
-      refetchOnWindowFocus: false,
-    },
-    {
-      queryKey: ['pulls', TabKey.REVIEWED_PULL_REQUESTS],
-      queryFn: () => queryReviewedPullRequests(data.token!, data.user.login!),
-      enabled: !!data,
-      refetchOnWindowFocus: false,
-    },
-    {
-      queryKey: ['pulls', TabKey.APPROVED_PULL_REQUESTS],
-      queryFn: () => queryApprovedPullRequests(data.token!, data.user.login!),
-      enabled: !!data,
-      refetchOnWindowFocus: false,
-    },
-  ] });
+  const { data: activePulls } = useQuery({
+    queryKey: buildPullsQueryKey(tabQuery, data?.user.login),
+    queryFn: () => queryPullsByTab(tabQuery, data!.token, data!.user.login),
+    enabled: !!data,
+  });
+
+  const getPullsDataByTab = (targetTab: TabKey) => {
+    if (targetTab === tabQuery) {
+      return activePulls;
+    }
+
+    return queryClient.getQueryData<Awaited<ReturnType<typeof queryPullsByTab>>>(buildPullsQueryKey(targetTab, data?.user.login));
+  };
 
   const tabs: Tab[] = [
     {
       key: TabKey.MY_PULL_REQUESTS,
       name: 'My',
       href: `/pulls?tab=${TabKey.MY_PULL_REQUESTS}`,
-      count: filterVisibleLabels(myPulls.data?.items, get(TabKey.MY_PULL_REQUESTS)).length,
+      count: filterVisibleLabels(getPullsDataByTab(TabKey.MY_PULL_REQUESTS)?.items, get(TabKey.MY_PULL_REQUESTS)).length,
     },
     {
       key: TabKey.REQUESTED_PULL_REQUESTS,
       name: 'Requested',
       href: `/pulls?tab=${TabKey.REQUESTED_PULL_REQUESTS}`,
-      count: filterVisibleLabels(requestedPulls.data?.items, get(TabKey.REQUESTED_PULL_REQUESTS)).length,
+      count: filterVisibleLabels(getPullsDataByTab(TabKey.REQUESTED_PULL_REQUESTS)?.items, get(TabKey.REQUESTED_PULL_REQUESTS)).length,
     },
     {
       key: TabKey.REVIEWED_PULL_REQUESTS,
       name: 'Reviewed',
       href: `/pulls?tab=${TabKey.REVIEWED_PULL_REQUESTS}`,
-      count: filterVisibleLabels(reviewedPulls.data?.items, get(TabKey.REVIEWED_PULL_REQUESTS)).length,
+      count: filterVisibleLabels(getPullsDataByTab(TabKey.REVIEWED_PULL_REQUESTS)?.items, get(TabKey.REVIEWED_PULL_REQUESTS)).length,
     },
     {
       key: TabKey.APPROVED_PULL_REQUESTS,
       name: 'Approved',
       href: `/pulls?tab=${TabKey.APPROVED_PULL_REQUESTS}`,
-      count: filterVisibleLabels(approvedPulls.data?.items, get(TabKey.APPROVED_PULL_REQUESTS)).length,
+      count: filterVisibleLabels(getPullsDataByTab(TabKey.APPROVED_PULL_REQUESTS)?.items, get(TabKey.APPROVED_PULL_REQUESTS)).length,
     }
   ];
   const requestedPullsCount = tabs[1].count;

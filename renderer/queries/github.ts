@@ -31,3 +31,20 @@ export const queryApprovedPullRequests = async (token: string, login?: string) =
     lastUpdatedAt: new Date(),
   };
 };
+
+export const buildPullsQueryKey = (tabKey: string, login?: string) => ['pulls', login || 'anonymous', tabKey] as const;
+
+export const queryPullsByTab = (tabKey: string, token: string, login?: string) => {
+  switch (tabKey) {
+    case 'myPullRequests':
+      return queryMyPullRequests(token);
+    case 'requestedPullRequests':
+      return queryRequestedPullRequests(token);
+    case 'reviewedPullRequests':
+      return queryReviewedPullRequests(token, login);
+    case 'approvedPullRequests':
+      return queryApprovedPullRequests(token, login);
+    default:
+      return queryMyPullRequests(token);
+  }
+};

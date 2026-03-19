@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
 import { isAuthorizedError } from '../../apis/github';
-import { queryApprovedPullRequests, queryMyPullRequests, queryRequestedPullRequests, queryReviewedPullRequests } from '../../queries/github';
+import { buildPullsQueryKey, queryPullsByTab } from '../../queries/github';
 import { useAuthStore } from '../../stores/auth';
 import { filterVisibleLabels, usePullsVisibleLabelsStore } from '../../stores/pulls';
 import { ipcHandler } from '../../utils/ipc';
@@ -31,19 +31,8 @@ export function PullsList() {
   const visibleLabels = get(tabQuery);
 
   const { data: pulls, isLoading, isRefetching, error, refetch } = useQuery({
-    queryKey: ['pulls', tabQuery],
-    queryFn: async () => {
-      switch(tabQuery) {
-        case TabKey.MY_PULL_REQUESTS: 
-          return queryMyPullRequests(data.token);
-        case TabKey.REQUESTED_PULL_REQUESTS:
-          return queryRequestedPullRequests(data.token);
-        case TabKey.REVIEWED_PULL_REQUESTS:
-          return queryReviewedPullRequests(data.token, data.user.login);
-        case TabKey.APPROVED_PULL_REQUESTS:
-          return queryApprovedPullRequests(data.token, data.user.login);
-      }
-    },
+    queryKey: buildPullsQueryKey(tabQuery, data?.user.login),
+    queryFn: () => queryPullsByTab(tabQuery, data!.token, data!.user.login),
     enabled: !!data,
   });
 
