@@ -7,6 +7,8 @@ import { ApprovedMark } from '../common/approved-mark';
 import { Label } from '../common/label';
 import { PullChanges } from './pull-changes';
 
+const DETAIL_STALE_TIME = 1000 * 60 * 10;
+
 interface MyPullsItemProps {
   title: string;
   titleUrl: string;
@@ -33,7 +35,10 @@ export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pu
   const { data: meta } = useQuery({
     queryKey: ['my-pull-meta', pullRequestUrl, data?.user.login],
     queryFn: () => fetchMyPullRequestMeta(data!.token, pullRequestUrl, data!.user.login),
-    enabled: !!data && hasIntersected,
+    enabled: !!data && !draft && hasIntersected,
+    staleTime: DETAIL_STALE_TIME,
+    gcTime: DETAIL_STALE_TIME,
+    refetchOnWindowFocus: false,
   });
 
   const reviewCount = meta?.reviewCount;

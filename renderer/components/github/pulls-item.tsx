@@ -8,6 +8,7 @@ import { Anchor } from '../common/anchor';
 import { PullChanges } from './pull-changes';
 
 const getProfileUrl = (userId: number, size = 40) => `https://avatars.githubusercontent.com/u/${userId}?s=${size}&v=4`;
+const DETAIL_STALE_TIME = 1000 * 60 * 10;
 
 interface PullsItemProps {
   title: string;
@@ -38,6 +39,9 @@ export function PullsItem({ title, titleUrl, subtitle, subtitleUrl, pullRequestU
     queryKey: ['pull-changes', pullRequestUrl],
     queryFn: () => fetchPullRequestChanges(data.token, pullRequestUrl),
     enabled: !!data && hasIntersected,
+    staleTime: DETAIL_STALE_TIME,
+    gcTime: DETAIL_STALE_TIME,
+    refetchOnWindowFocus: false,
   });
 
   return (
