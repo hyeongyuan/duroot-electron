@@ -43,6 +43,7 @@ export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pu
 
   const reviewCount = meta?.reviewCount;
   const changes = meta?.changes;
+  const showMetaPlaceholder = !draft && hasIntersected && !meta;
 
   const allApproved = reviewCount && reviewCount.approved === reviewCount.total;
 
@@ -76,12 +77,14 @@ export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pu
           <Label key={name} name={name} color={color} />
         ))}
       </span>
-      {(caption || changes) && (
+      {(caption || changes || showMetaPlaceholder) && (
         <div className="mt-1 flex items-center justify-between gap-2 text-[#768390]">
-          <p className="min-w-0 text-[10px] leading-5 line-clamp-1 break-all">
-            {caption}
-          </p>
-          {changes ? <PullChanges additions={changes.additions} deletions={changes.deletions} /> : null}
+          {caption ? (
+            <p className="min-w-0 text-[10px] leading-5 line-clamp-1 break-all">
+              {caption}
+            </p>
+          ) : (showMetaPlaceholder ? <div className="h-3 w-12 rounded bg-[#373e47] animate-pulse" /> : null)}
+          {changes ? <PullChanges additions={changes.additions} deletions={changes.deletions} /> : (showMetaPlaceholder ? <div className="h-3 w-14 rounded bg-[#2d333b] animate-pulse" /> : null)}
         </div>
       )}
     </li>

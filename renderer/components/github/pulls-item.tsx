@@ -10,6 +10,10 @@ import { PullChanges } from './pull-changes';
 const getProfileUrl = (userId: number, size = 40) => `https://avatars.githubusercontent.com/u/${userId}?s=${size}&v=4`;
 const DETAIL_STALE_TIME = 1000 * 60 * 10;
 
+function ChangesPlaceholder() {
+  return <div className="h-3 w-14 rounded bg-[#2d333b] animate-pulse" aria-hidden="true" />;
+}
+
 interface PullsItemProps {
   title: string;
   titleUrl: string;
@@ -84,7 +88,7 @@ export function PullsItem({ title, titleUrl, subtitle, subtitleUrl, pullRequestU
             </p>
           </span>
         </div>
-        {changes ? <PullChanges additions={changes.additions} deletions={changes.deletions} /> : null}
+        {changes ? <PullChanges additions={changes.additions} deletions={changes.deletions} /> : (hasIntersected ? <ChangesPlaceholder /> : <div className="w-14" aria-hidden="true" />)}
       </div>
     </li>
   );
