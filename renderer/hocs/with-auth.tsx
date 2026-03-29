@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../stores/auth';
 import type { GithubUser } from '../types/github';
-import { fetchUser } from '../apis/github';
-import { ipcHandler } from '../utils/ipc';
+import { AuthNetworkError } from '../components/auth-network-error';
+import { clearAuthSession, type AuthViewState, recoverStoredAuthSession } from '../utils/auth';
 
 export interface AuthProps {
   auth: GithubUser;
@@ -13,28 +13,46 @@ export const withAuth = <P extends AuthProps>(WrappedComponent: React.ComponentT
   const Component = (props: Omit<P, keyof AuthProps>) => {
     const router = useRouter();
     const { data: authData, setData: setAuthData } = useAuthStore();
+    const [viewState, setViewState] = useState<AuthViewState>('loading');
+
+    const restoreAuthSession = useCallback(async () => {
+      setViewState('loading');
+
+      const result = await recoverStoredAuthSession();
+
+      switch (result.status) {
+        case 'authorized':
+          setAuthData({ user: result.user, token: result.token });
+          return;
+        case 'missing_token':
+          setAuthData(null);
+          router.replace('/auth');
+          return;
+        case 'unauthorized':
+          await clearAuthSession(setAuthData);
+          router.replace('/auth');
+          return;
+        case 'network_error':
+          setViewState('network_error');
+          return;
+        case 'error':
+          setAuthData(null);
+          router.replace('/auth');
+          return;
+      }
+    }, [router, setAuthData]);
 
     useEffect(() => {
       if (authData) {
         return;
       }
-      ipcHandler.getStorage('auth.token')
-        .then(async (token?: string) => {
-          if (!token) {
-            router.replace('/auth');
-            return;
-          }
-          try {
-            const user = await fetchUser(token);
-            
-            setAuthData({ user, token });
-          } catch (error) {
-            router.replace('/auth');
-          }
-        });
-    }, [router, authData, setAuthData]);
+      restoreAuthSession();
+    }, [authData, restoreAuthSession]);
 
     if (!authData) {
+      if (viewState === 'network_error') {
+        return <AuthNetworkError onRetry={restoreAuthSession} />;
+      }
       return null;
     }
     return <WrappedComponent {...(props as P)} auth={authData} />;
