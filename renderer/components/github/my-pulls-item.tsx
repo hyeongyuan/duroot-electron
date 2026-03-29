@@ -7,7 +7,8 @@ import { ApprovedMark } from '../common/approved-mark';
 import { Label } from '../common/label';
 import { PullChanges } from './pull-changes';
 
-const DETAIL_STALE_TIME = 1000 * 60 * 10;
+const DETAIL_STALE_TIME = 1000 * 30;
+const DETAIL_GC_TIME = 1000 * 60 * 5;
 
 interface MyPullsItemProps {
   title: string;
@@ -26,24 +27,24 @@ interface MyPullsItemProps {
 export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pullRequestUrl, caption, draft }: MyPullsItemProps) {
   const { data } = useAuthStore();
 
-  const { targetRef, hasIntersected } = useIntersectionObserver<HTMLLIElement>({
+  const { targetRef, isIntersecting } = useIntersectionObserver<HTMLLIElement>({
     threshold: 0.1,
     rootMargin: '50px',
-    triggerOnce: true,
+    triggerOnce: false,
   });
 
   const { data: meta } = useQuery({
     queryKey: ['my-pull-meta', pullRequestUrl, data?.user.login],
     queryFn: () => fetchMyPullRequestMeta(data!.token, pullRequestUrl, data!.user.login),
-    enabled: !!data && !draft && hasIntersected,
+    enabled: !!data && !draft && isIntersecting,
     staleTime: DETAIL_STALE_TIME,
-    gcTime: DETAIL_STALE_TIME,
+    gcTime: DETAIL_GC_TIME,
     refetchOnWindowFocus: false,
   });
 
   const reviewCount = meta?.reviewCount;
   const changes = meta?.changes;
-  const showMetaPlaceholder = !draft && hasIntersected && !meta;
+  const showMetaPlaceholder = !draft && isIntersecting && !meta;
 
   const allApproved = reviewCount && reviewCount.approved === reviewCount.total;
 
