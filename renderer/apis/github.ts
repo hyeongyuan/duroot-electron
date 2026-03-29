@@ -126,4 +126,12 @@ export const fetchMyPullRequestMeta = async (token: string, pullRequestUrl: stri
 
 export const isAuthorizedError = (error: unknown): error is AxiosError => {
   return axios.isAxiosError(error) && error.response?.status === 401;
-}
+};
+
+export const isNetworkError = (error: unknown): error is AxiosError => {
+  if (!axios.isAxiosError(error)) {
+    return false;
+  }
+
+  return !error.response || error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED';
+};

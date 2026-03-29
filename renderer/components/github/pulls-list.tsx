@@ -7,6 +7,7 @@ import { isAuthorizedError } from '../../apis/github';
 import { buildPullsQueryKey, queryPullsByTab } from '../../queries/github';
 import { useAuthStore } from '../../stores/auth';
 import { filterVisibleLabels, usePullsVisibleLabelsStore } from '../../stores/pulls';
+import { clearAuthSession } from '../../utils/auth';
 import { ipcHandler } from '../../utils/ipc';
 import { IconButton } from '../common/icon-button';
 import { TABS_HEIGHT } from "../common/tabs";
@@ -38,7 +39,7 @@ export function PullsList() {
 
   useEffect(() => {
     if (isAuthorizedError(error)) {
-      ipcHandler.deleteStorage('auth.token')
+      clearAuthSession(useAuthStore.getState().setData)
         .then(() => {
           router.replace('/auth');
         });

@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { HEADER_HEIGHT } from "../components/header";
 import { useAuthStore } from "../stores/auth";
+import { clearAuthSession } from "../utils/auth";
 import { ipcHandler } from "../utils/ipc";
 
 export default function SettingsPage() {
@@ -14,9 +15,7 @@ export default function SettingsPage() {
   }, []);
 
   const handleSignOut = async () => {
-    await ipcHandler.deleteStorage('auth.token');
-
-    setAuthData(null);
+    await clearAuthSession(setAuthData);
 
     router.push('/auth');
   };
