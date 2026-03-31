@@ -10,7 +10,9 @@ export function AuthNetworkError({ onRetry }: AuthNetworkErrorProps) {
 					Network connection issue
 				</p>
 				<p className="mt-2 text-xs leading-5 text-[#768390] whitespace-pre-line">
-					{`We could not verify your GitHub session.\nCheck your network and try again.`}
+					{
+						"We could not verify your GitHub session.\nCheck your network and try again."
+					}
 				</p>
 				<button
 					type="button"

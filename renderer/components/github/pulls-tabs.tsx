@@ -24,10 +24,19 @@ export function PullsTabs() {
 	const { data } = useAuthStore();
 	const { get } = usePullsVisibleLabelsStore();
 	const queryClient = useQueryClient();
+	const getAuthData = () => {
+		if (!data) {
+			throw new Error("Auth data is required");
+		}
+		return data;
+	};
 
 	const { data: activePulls } = useQuery({
 		queryKey: buildPullsQueryKey(tabQuery, data?.user.login),
-		queryFn: () => queryPullsByTab(tabQuery, data!.token, data!.user.login),
+		queryFn: () => {
+			const authData = getAuthData();
+			return queryPullsByTab(tabQuery, authData.token, authData.user.login);
+		},
 		enabled: !!data,
 	});
 

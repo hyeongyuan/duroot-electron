@@ -51,7 +51,8 @@ export function Header() {
 				</a>
 			</div>
 			<div className="relative select-none" ref={elementRef}>
-				<div
+				<button
+					type="button"
 					className="cursor-pointer"
 					onClick={() => setIsOpen((prev) => !prev)}
 				>
@@ -63,7 +64,7 @@ export function Header() {
 								: ""
 						}
 					/>
-				</div>
+				</button>
 				<Drawer visible={isOpen} onClose={() => setIsOpen(false)} />
 			</div>
 		</div>

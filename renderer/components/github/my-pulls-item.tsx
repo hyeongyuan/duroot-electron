@@ -38,6 +38,12 @@ export function MyPullsItem({
 	isExiting = false,
 }: MyPullsItemProps) {
 	const { data } = useAuthStore();
+	const getAuthData = () => {
+		if (!data) {
+			throw new Error("Auth data is required");
+		}
+		return data;
+	};
 
 	const { targetRef, isIntersecting } = useIntersectionObserver<HTMLLIElement>({
 		threshold: 0.1,
@@ -47,8 +53,14 @@ export function MyPullsItem({
 
 	const { data: meta } = useQuery({
 		queryKey: ["my-pull-meta", pullRequestUrl, data?.user.login],
-		queryFn: () =>
-			fetchMyPullRequestMeta(data!.token, pullRequestUrl, data!.user.login),
+		queryFn: () => {
+			const authData = getAuthData();
+			return fetchMyPullRequestMeta(
+				authData.token,
+				pullRequestUrl,
+				authData.user.login,
+			);
+		},
 		enabled: !!data && !draft && isIntersecting,
 		staleTime: DETAIL_STALE_TIME,
 		gcTime: DETAIL_GC_TIME,

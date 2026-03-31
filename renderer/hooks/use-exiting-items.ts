@@ -44,7 +44,9 @@ export const useExitingItems = <T>({
 		}));
 
 		if (previousScopeKeyRef.current !== scopeKey) {
-			Object.values(exitTimeoutsRef.current).forEach(clearTimeout);
+			for (const timeoutId of Object.values(exitTimeoutsRef.current)) {
+				clearTimeout(timeoutId);
+			}
 			exitTimeoutsRef.current = {};
 			previousScopeKeyRef.current = scopeKey;
 			setRenderedItems(incomingEntries);
@@ -65,9 +67,9 @@ export const useExitingItems = <T>({
 				isExiting: false,
 			}));
 
-			prev.forEach((entry, index) => {
+			for (const [index, entry] of prev.entries()) {
 				if (incomingMap.has(entry.key) || entry.isExiting) {
-					return;
+					continue;
 				}
 
 				const exitingEntry = { ...entry, isExiting: true };
@@ -79,9 +81,9 @@ export const useExitingItems = <T>({
 					.filter((prevEntry) => !incomingMap.has(prevEntry.key)).length;
 
 				next.splice(earlierVisibleCount + earlierExitingCount, 0, exitingEntry);
-			});
+			}
 
-			prev.forEach((entry) => {
+			for (const entry of prev) {
 				if (
 					!incomingMap.has(entry.key) &&
 					entry.isExiting &&
@@ -89,7 +91,7 @@ export const useExitingItems = <T>({
 				) {
 					next.push(entry);
 				}
-			});
+			}
 
 			return next.map((entry) => {
 				const previous = prevMap.get(entry.key);
@@ -107,9 +109,9 @@ export const useExitingItems = <T>({
 	}, [items, scopeKey]);
 
 	useEffect(() => {
-		renderedItems.forEach((entry) => {
+		for (const entry of renderedItems) {
 			if (!entry.isExiting || exitTimeoutsRef.current[entry.key]) {
-				return;
+				continue;
 			}
 
 			exitTimeoutsRef.current[entry.key] = setTimeout(() => {
@@ -118,24 +120,26 @@ export const useExitingItems = <T>({
 				);
 				delete exitTimeoutsRef.current[entry.key];
 			}, exitDuration);
-		});
+		}
 
-		Object.entries(exitTimeoutsRef.current).forEach(([key, timeoutId]) => {
+		for (const [key, timeoutId] of Object.entries(exitTimeoutsRef.current)) {
 			const entry = renderedItems.find(
 				(renderedEntry) => renderedEntry.key === key,
 			);
 			if (entry?.isExiting) {
-				return;
+				continue;
 			}
 
 			clearTimeout(timeoutId);
 			delete exitTimeoutsRef.current[key];
-		});
+		}
 	}, [exitDuration, renderedItems]);
 
 	useEffect(() => {
 		return () => {
-			Object.values(exitTimeoutsRef.current).forEach(clearTimeout);
+			for (const timeoutId of Object.values(exitTimeoutsRef.current)) {
+				clearTimeout(timeoutId);
+			}
 		};
 	}, []);
 

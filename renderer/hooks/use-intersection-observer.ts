@@ -25,7 +25,7 @@ export const useIntersectionObserver = <T extends HTMLElement>(
 		}
 		const observer = new IntersectionObserver(
 			(entries) => {
-				entries.forEach((entry) => {
+				for (const entry of entries) {
 					const isIntersectingNow = entry.isIntersecting;
 					setIsIntersecting(isIntersectingNow);
 
@@ -35,7 +35,7 @@ export const useIntersectionObserver = <T extends HTMLElement>(
 							observer.unobserve(target);
 						}
 					}
-				});
+				}
 			},
 			{ threshold, rootMargin },
 		);

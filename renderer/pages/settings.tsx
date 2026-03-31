@@ -26,13 +26,20 @@ export default function SettingsPage() {
 				style={{ height: HEADER_HEIGHT }}
 				className="flex items-center bg-[#2d333b] border border-[#373e47] px-4"
 			>
-				<div className="cursor-pointer mr-2" onClick={() => router.back()}>
+				<button
+					type="button"
+					className="mr-2 cursor-pointer"
+					onClick={() => router.back()}
+					aria-label="Go back"
+				>
 					<svg
 						width="20"
 						height="20"
 						viewBox="0 0 32 32"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
+						aria-hidden="true"
+						focusable="false"
 					>
 						<path
 							id="Vector"
@@ -40,7 +47,7 @@ export default function SettingsPage() {
 							fill="#e6edf3"
 						/>
 					</svg>
-				</div>
+				</button>
 				<h1 className="text-[#e6edf3]">Settings</h1>
 			</div>
 			<div className="pt-4">
@@ -56,12 +63,13 @@ export default function SettingsPage() {
 					</div>
 				</section>
 				<section className="px-6 pb-8">
-					<div
-						className="flex items-center justify-between bg-[#2d333b] rounded-lg px-4 py-2 cursor-pointer hover:bg-[#373e47] overflow-hidden"
+					<button
+						type="button"
+						className="w-full text-left bg-[#2d333b] rounded-lg px-4 py-2 cursor-pointer hover:bg-[#373e47] overflow-hidden"
 						onClick={handleSignOut}
 					>
 						<span className="text-[#539BF5]">Sign out</span>
-					</div>
+					</button>
 				</section>
 			</div>
 		</div>

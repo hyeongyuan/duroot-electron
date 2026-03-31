@@ -46,6 +46,12 @@ export function PullsList() {
 	const { data } = useAuthStore();
 	const { get, set } = usePullsVisibleLabelsStore();
 	const visibleLabels = get(tabQuery);
+	const getAuthData = () => {
+		if (!data) {
+			throw new Error("Auth data is required");
+		}
+		return data;
+	};
 
 	const {
 		data: pulls,
@@ -55,7 +61,10 @@ export function PullsList() {
 		refetch,
 	} = useQuery({
 		queryKey: buildPullsQueryKey(tabQuery, data?.user.login),
-		queryFn: () => queryPullsByTab(tabQuery, data!.token, data!.user.login),
+		queryFn: () => {
+			const authData = getAuthData();
+			return queryPullsByTab(tabQuery, authData.token, authData.user.login);
+		},
 		enabled: !!data,
 	});
 
@@ -99,8 +108,9 @@ export function PullsList() {
 	);
 
 	const handleClickOpenAll = () => {
-		const urls = filteredPulls.map((item) => item.html_url);
-		urls.forEach((url) => ipcHandler.openExternal(url));
+		for (const item of filteredPulls) {
+			ipcHandler.openExternal(item.html_url);
+		}
 	};
 
 	const showInitialLoading = isLoading && !pulls;

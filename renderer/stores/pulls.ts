@@ -49,14 +49,16 @@ export const usePullsVisibleLabelsStore = create<PullsVisibleLabelsState>(
 );
 
 export const filterVisibleLabels = (
-	items: GithubIssueItem[] = [],
+	items: GithubIssueItem[] | undefined,
 	visibleLabels: string[],
 ) => {
+	const safeItems = items ?? [];
+
 	if (visibleLabels.length === 0) {
-		return items;
+		return safeItems;
 	}
 
-	return items.filter((item) =>
+	return safeItems.filter((item) =>
 		item.labels.some((label) => visibleLabels.includes(label.name)),
 	);
 };
