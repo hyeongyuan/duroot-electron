@@ -7,7 +7,13 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": []
+		"ignore": [
+			"app",
+			"dist",
+			"renderer/.next",
+			"renderer/tsconfig.tsbuildinfo",
+			"node_modules"
+		]
 	},
 	"formatter": {
 		"enabled": true,

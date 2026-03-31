@@ -1,97 +1,128 @@
-import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
-import { useQuery } from '@tanstack/react-query';
-import { fetchPullRequestChanges } from '../../apis/github';
-import { useIntersectionObserver } from '../../hooks/use-intersection-observer';
-import { useAuthStore } from '../../stores/auth';
-import { Label } from '../common/label';
-import { Anchor } from '../common/anchor';
-import { PullListItemShell } from './pull-list-item-shell';
-import { PullChanges } from './pull-changes';
+import { useQuery } from "@tanstack/react-query";
+import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
+import { fetchPullRequestChanges } from "../../apis/github";
+import { useIntersectionObserver } from "../../hooks/use-intersection-observer";
+import { useAuthStore } from "../../stores/auth";
+import { Anchor } from "../common/anchor";
+import { Label } from "../common/label";
+import { PullChanges } from "./pull-changes";
+import { PullListItemShell } from "./pull-list-item-shell";
 
-const getProfileUrl = (userId: number, size = 40) => `https://avatars.githubusercontent.com/u/${userId}?s=${size}&v=4`;
+const getProfileUrl = (userId: number, size = 40) =>
+	`https://avatars.githubusercontent.com/u/${userId}?s=${size}&v=4`;
 const DETAIL_STALE_TIME = 1000 * 60 * 10;
 
 function ChangesPlaceholder() {
-  return <div className="h-3 w-14 rounded bg-[#2d333b] animate-pulse" aria-hidden="true" />;
+	return (
+		<div
+			className="h-3 w-14 rounded bg-[#2d333b] animate-pulse"
+			aria-hidden="true"
+		/>
+	);
 }
 
 interface PullsItemProps {
-  title: string;
-  titleUrl: string;
-  subtitle: string;
-  subtitleUrl: string;
-  pullRequestUrl: string;
-  labels: {
-    name: string;
-    color: string;
-  }[];
-  user: {
-    id: number;
-    login: string;
-  };
-  createdAt: string;
-  isExiting?: boolean;
+	title: string;
+	titleUrl: string;
+	subtitle: string;
+	subtitleUrl: string;
+	pullRequestUrl: string;
+	labels: {
+		name: string;
+		color: string;
+	}[];
+	user: {
+		id: number;
+		login: string;
+	};
+	createdAt: string;
+	isExiting?: boolean;
 }
 
-export function PullsItem({ title, titleUrl, subtitle, subtitleUrl, pullRequestUrl, labels, user, createdAt, isExiting = false }: PullsItemProps) {
-  const { data } = useAuthStore();
-  const { targetRef, hasIntersected } = useIntersectionObserver<HTMLLIElement>({
-    threshold: 0.1,
-    rootMargin: '50px',
-    triggerOnce: true,
-  });
+export function PullsItem({
+	title,
+	titleUrl,
+	subtitle,
+	subtitleUrl,
+	pullRequestUrl,
+	labels,
+	user,
+	createdAt,
+	isExiting = false,
+}: PullsItemProps) {
+	const { data } = useAuthStore();
+	const { targetRef, hasIntersected } = useIntersectionObserver<HTMLLIElement>({
+		threshold: 0.1,
+		rootMargin: "50px",
+		triggerOnce: true,
+	});
 
-  const { data: changes } = useQuery({
-    queryKey: ['pull-changes', pullRequestUrl],
-    queryFn: () => fetchPullRequestChanges(data.token, pullRequestUrl),
-    enabled: !!data && hasIntersected,
-    staleTime: DETAIL_STALE_TIME,
-    gcTime: DETAIL_STALE_TIME,
-    refetchOnWindowFocus: false,
-  });
+	const { data: changes } = useQuery({
+		queryKey: ["pull-changes", pullRequestUrl],
+		queryFn: () => fetchPullRequestChanges(data.token, pullRequestUrl),
+		enabled: !!data && hasIntersected,
+		staleTime: DETAIL_STALE_TIME,
+		gcTime: DETAIL_STALE_TIME,
+		refetchOnWindowFocus: false,
+	});
 
-  return (
-    <PullListItemShell ref={targetRef} isExiting={isExiting}>
-      <div className="flex items-center">
-        <Anchor
-          className="text-[#768390] text-xs leading-5 line-clamp-1 break-all hover:underline hover:underline-offset-1 pr-1"
-          href={subtitleUrl}
-          target="_blank"
-        >
-          {subtitle}
-        </Anchor>
-      </div>
-      <div className={labels.length > 0 ? 'mb-1' : ''}>
-        <Anchor
-          className="font-medium text-sm hover:text-[#539bf5] leading-6 line-clamp-3 break-all"
-          href={titleUrl}
-          target="_blank"
-        >
-          {title}
-        </Anchor>
-      </div>
-      <span className={`${labels.length > 0 ? 'mb-1' : ''} flex flex-wrap space-x-1 gap-1`}> 
-        {labels.map(({ name, color }) => (
-          <Label key={name} name={name} color={color} />
-        ))}
-      </span>
-      <div className="flex items-center justify-between gap-2 text-[#768390]">
-        <div className="flex min-w-0 items-center">
-          <span className="flex min-w-0 items-center">
-            <img className="w-4 h-4 rounded-full mr-2" src={getProfileUrl(user.id, 32)} alt="avatar" />
-            <p className="text-[#adbac7] text-[10px] font-medium leading-5 line-clamp-1 break-all">
-              {user.login}
-            </p>
-          </span>
-          <span className="mx-1">·</span>
-          <span>
-            <p className="text-[10px] font-medium leading-5 line-clamp-1 break-all">
-              {formatDistanceToNow(new Date(createdAt))}
-            </p>
-          </span>
-        </div>
-        {changes ? <PullChanges additions={changes.additions} deletions={changes.deletions} /> : (hasIntersected ? <ChangesPlaceholder /> : <div className="w-14" aria-hidden="true" />)}
-      </div>
-    </PullListItemShell>
-  );
+	return (
+		<PullListItemShell ref={targetRef} isExiting={isExiting}>
+			<div className="flex items-center">
+				<Anchor
+					className="text-[#768390] text-xs leading-5 line-clamp-1 break-all hover:underline hover:underline-offset-1 pr-1"
+					href={subtitleUrl}
+					target="_blank"
+				>
+					{subtitle}
+				</Anchor>
+			</div>
+			<div className={labels.length > 0 ? "mb-1" : ""}>
+				<Anchor
+					className="font-medium text-sm hover:text-[#539bf5] leading-6 line-clamp-3 break-all"
+					href={titleUrl}
+					target="_blank"
+				>
+					{title}
+				</Anchor>
+			</div>
+			<span
+				className={`${labels.length > 0 ? "mb-1" : ""} flex flex-wrap space-x-1 gap-1`}
+			>
+				{labels.map(({ name, color }) => (
+					<Label key={name} name={name} color={color} />
+				))}
+			</span>
+			<div className="flex items-center justify-between gap-2 text-[#768390]">
+				<div className="flex min-w-0 items-center">
+					<span className="flex min-w-0 items-center">
+						<img
+							className="w-4 h-4 rounded-full mr-2"
+							src={getProfileUrl(user.id, 32)}
+							alt="avatar"
+						/>
+						<p className="text-[#adbac7] text-[10px] font-medium leading-5 line-clamp-1 break-all">
+							{user.login}
+						</p>
+					</span>
+					<span className="mx-1">·</span>
+					<span>
+						<p className="text-[10px] font-medium leading-5 line-clamp-1 break-all">
+							{formatDistanceToNow(new Date(createdAt))}
+						</p>
+					</span>
+				</div>
+				{changes ? (
+					<PullChanges
+						additions={changes.additions}
+						deletions={changes.deletions}
+					/>
+				) : hasIntersected ? (
+					<ChangesPlaceholder />
+				) : (
+					<div className="w-14" aria-hidden="true" />
+				)}
+			</div>
+		</PullListItemShell>
+	);
 }

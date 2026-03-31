@@ -1,25 +1,27 @@
-import path from 'node:path';
-import { nativeImage, Tray } from 'electron';
+import path from "node:path";
+import { Tray, nativeImage } from "electron";
 
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === "production";
 
 const getResourcesPath = (pathname: string) => {
-  return path.join(isProd ? process.resourcesPath : process.cwd(), pathname);
+	return path.join(isProd ? process.resourcesPath : process.cwd(), pathname);
 };
 
 export const getTrayIcon = (filename: string) => {
-  const icon = nativeImage.createFromPath(getResourcesPath(`assets/${filename}`));
-  const trayIcon = icon.resize({ width: 18 });
+	const icon = nativeImage.createFromPath(
+		getResourcesPath(`assets/${filename}`),
+	);
+	const trayIcon = icon.resize({ width: 18 });
 
-  trayIcon.setTemplateImage(true);
+	trayIcon.setTemplateImage(true);
 
-  return trayIcon;
+	return trayIcon;
 };
 
 export const createTray = () => {
-  const trayIcon = getTrayIcon('tray-icon.png');
+	const trayIcon = getTrayIcon("tray-icon.png");
 
-  const tray = new Tray(trayIcon);
+	const tray = new Tray(trayIcon);
 
-  return tray;
+	return tray;
 };
