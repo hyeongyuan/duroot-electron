@@ -24,6 +24,7 @@ export const useExitingItems = <T>({
   const [renderedItems, setRenderedItems] = useState<ExitingItem<T>[]>([]);
   const exitTimeoutsRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
   const getItemKeyRef = useRef(getItemKey);
+  const previousScopeKeyRef = useRef(scopeKey);
 
   useEffect(() => {
     getItemKeyRef.current = getItemKey;
@@ -39,6 +40,14 @@ export const useExitingItems = <T>({
       item,
       isExiting: false,
     }));
+
+    if (previousScopeKeyRef.current !== scopeKey) {
+      Object.values(exitTimeoutsRef.current).forEach(clearTimeout);
+      exitTimeoutsRef.current = {};
+      previousScopeKeyRef.current = scopeKey;
+      setRenderedItems(incomingEntries);
+      return;
+    }
 
     setRenderedItems(prev => {
       if (prev.length === 0) {
