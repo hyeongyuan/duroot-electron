@@ -4,9 +4,11 @@ import { formatDistanceToNow } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { isAuthorizedError } from '../../apis/github';
+import { useExitingItems } from '../../hooks/use-exiting-items';
 import { buildPullsQueryKey, queryPullsByTab } from '../../queries/github';
 import { useAuthStore } from '../../stores/auth';
 import { filterVisibleLabels, usePullsVisibleLabelsStore } from '../../stores/pulls';
+import type { GithubIssueItem } from '../../types/github';
 import { clearAuthSession } from '../../utils/auth';
 import { ipcHandler } from '../../utils/ipc';
 import { IconButton } from '../common/icon-button';
@@ -22,6 +24,13 @@ import { TabKey } from './pulls-tabs';
 
 const WINDOW_HEIGHT = 500;
 const HEADER_SECTION_HEIGHT = HEADER_HEIGHT + TABS_HEIGHT;
+
+const isPullVisible = (pull: GithubIssueItem, visibleLabels: string[]) => {
+  if (visibleLabels.length === 0) {
+    return true;
+  }
+  return pull.labels.some(label => visibleLabels.includes(label.name));
+};
 
 export function PullsList() {
   const searchParams = useSearchParams();
@@ -46,6 +55,12 @@ export function PullsList() {
     }
   }, [error, router]);
 
+  const renderedPulls = useExitingItems({
+    items: pulls?.items,
+    scopeKey: tabQuery,
+    getItemKey: (pull) => pull.id,
+  });
+
 
   const onChangeLabelFilter = (chip: { name: string; checked: boolean }) => {
     const newVisibleLabels = chip.checked
@@ -67,6 +82,7 @@ export function PullsList() {
     checked: visibleLabels.includes(label),
   }));
   const filteredPulls = filterVisibleLabels(pulls?.items, visibleLabels);
+  const visibleRenderedPulls = renderedPulls.filter(entry => isPullVisible(entry.item, visibleLabels));
 
   const handleClickOpenAll = () => {
     const urls = filteredPulls.map(item => item.html_url);
@@ -74,8 +90,8 @@ export function PullsList() {
   };
 
   const showInitialLoading = isLoading && !pulls;
-  const showNoData = !!pulls && pulls.items.length === 0;
-  const showFilteredEmpty = !!pulls && pulls.items.length > 0 && filteredPulls.length === 0;
+  const showNoData = !!pulls && pulls.items.length === 0 && visibleRenderedPulls.length === 0;
+  const showFilteredEmpty = !!pulls && pulls.items.length > 0 && filteredPulls.length === 0 && visibleRenderedPulls.length === 0;
 
   return (
     <div style={{ height: `${WINDOW_HEIGHT - HEADER_SECTION_HEIGHT}px` }} className="overflow-y-auto">
@@ -123,7 +139,8 @@ export function PullsList() {
       ) : null}
       {!showInitialLoading && !showNoData && !showFilteredEmpty ? (
         <ul className="divide-y divide-[#373e47]" aria-busy={isRefetching}>
-          {filteredPulls.map((pull => {
+          {visibleRenderedPulls.map((entry) => {
+            const { item: pull, isExiting } = entry;
             const [repo, owner] = pull.repository_url.split('/').reverse();
             const ownerRepo = `${owner}/${repo}`;
             const labels = pull.draft
@@ -133,7 +150,7 @@ export function PullsList() {
             if (tabQuery === TabKey.MY_PULL_REQUESTS) {
               return (
                 <MyPullsItem
-                  key={pull.id}
+                  key={entry.key}
                   title={pull.title}
                   titleUrl={pull.html_url}
                   subtitle={ownerRepo}
@@ -142,12 +159,13 @@ export function PullsList() {
                   caption={formatDistanceToNow(new Date(pull.created_at))}
                   pullRequestUrl={pull.pull_request.url}
                   draft={pull.draft}
+                  isExiting={isExiting}
                 />
               );
             }
             return (
               <PullsItem
-                key={pull.id}
+                key={entry.key}
                 title={pull.title}
                 titleUrl={pull.html_url}
                 subtitle={ownerRepo}
@@ -159,9 +177,10 @@ export function PullsList() {
                   login: pull.user.login,
                 }}
                 createdAt={pull.created_at}
+                isExiting={isExiting}
               />
             );
-          }))}
+          })}
         </ul>
       ) : null}
     </div>

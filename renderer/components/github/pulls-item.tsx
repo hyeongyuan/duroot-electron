@@ -5,6 +5,7 @@ import { useIntersectionObserver } from '../../hooks/use-intersection-observer';
 import { useAuthStore } from '../../stores/auth';
 import { Label } from '../common/label';
 import { Anchor } from '../common/anchor';
+import { PullListItemShell } from './pull-list-item-shell';
 import { PullChanges } from './pull-changes';
 
 const getProfileUrl = (userId: number, size = 40) => `https://avatars.githubusercontent.com/u/${userId}?s=${size}&v=4`;
@@ -29,9 +30,10 @@ interface PullsItemProps {
     login: string;
   };
   createdAt: string;
+  isExiting?: boolean;
 }
 
-export function PullsItem({ title, titleUrl, subtitle, subtitleUrl, pullRequestUrl, labels, user, createdAt }: PullsItemProps) {
+export function PullsItem({ title, titleUrl, subtitle, subtitleUrl, pullRequestUrl, labels, user, createdAt, isExiting = false }: PullsItemProps) {
   const { data } = useAuthStore();
   const { targetRef, hasIntersected } = useIntersectionObserver<HTMLLIElement>({
     threshold: 0.1,
@@ -49,7 +51,7 @@ export function PullsItem({ title, titleUrl, subtitle, subtitleUrl, pullRequestU
   });
 
   return (
-    <li ref={targetRef} className="flex flex-col px-4 py-2">
+    <PullListItemShell ref={targetRef} isExiting={isExiting}>
       <div className="flex items-center">
         <Anchor
           className="text-[#768390] text-xs leading-5 line-clamp-1 break-all hover:underline hover:underline-offset-1 pr-1"
@@ -90,6 +92,6 @@ export function PullsItem({ title, titleUrl, subtitle, subtitleUrl, pullRequestU
         </div>
         {changes ? <PullChanges additions={changes.additions} deletions={changes.deletions} /> : (hasIntersected ? <ChangesPlaceholder /> : <div className="w-14" aria-hidden="true" />)}
       </div>
-    </li>
+    </PullListItemShell>
   );
 }

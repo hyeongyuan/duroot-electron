@@ -5,6 +5,7 @@ import { useAuthStore } from '../../stores/auth';
 import { Anchor } from '../common/anchor';
 import { ApprovedMark } from '../common/approved-mark';
 import { Label } from '../common/label';
+import { PullListItemShell } from './pull-list-item-shell';
 import { PullChanges } from './pull-changes';
 
 const DETAIL_STALE_TIME = 1000 * 30;
@@ -22,9 +23,10 @@ interface MyPullsItemProps {
   pullRequestUrl: string;
   caption?: string;
   draft?: boolean;
+  isExiting?: boolean;
 }
 
-export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pullRequestUrl, caption, draft }: MyPullsItemProps) {
+export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pullRequestUrl, caption, draft, isExiting = false }: MyPullsItemProps) {
   const { data } = useAuthStore();
 
   const { targetRef, isIntersecting } = useIntersectionObserver<HTMLLIElement>({
@@ -49,7 +51,7 @@ export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pu
   const allApproved = reviewCount && reviewCount.approved === reviewCount.total;
 
   return (
-    <li ref={targetRef} className="flex flex-col px-4 py-2">
+    <PullListItemShell ref={targetRef} isExiting={isExiting}>
       <div className="flex items-center">
         <Anchor
           className="text-[#768390] text-xs leading-5 line-clamp-1 break-all hover:underline hover:underline-offset-1 pr-1"
@@ -88,6 +90,6 @@ export function MyPullsItem({ title, titleUrl, subtitle, subtitleUrl, labels, pu
           {changes ? <PullChanges additions={changes.additions} deletions={changes.deletions} /> : (showMetaPlaceholder ? <div className="h-3 w-14 rounded bg-[#2d333b] animate-pulse" /> : null)}
         </div>
       )}
-    </li>
+    </PullListItemShell>
   );
 }
