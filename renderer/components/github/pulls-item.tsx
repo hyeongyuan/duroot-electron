@@ -70,7 +70,7 @@ export function PullsItem({
 		<PullListItemShell ref={targetRef} isExiting={isExiting}>
 			<div className="flex items-center">
 				<Anchor
-					className="text-[#768390] text-xs leading-5 line-clamp-1 break-all hover:underline hover:underline-offset-1 pr-1"
+					className="text-[#768390] text-xs leading-5 line-clamp-1 break-all text-left hover:underline hover:underline-offset-1 pr-1"
 					href={subtitleUrl}
 				>
 					{subtitle}
@@ -78,7 +78,7 @@ export function PullsItem({
 			</div>
 			<div className={labels.length > 0 ? "mb-1" : ""}>
 				<Anchor
-					className="font-medium text-sm hover:text-[#539bf5] leading-6 line-clamp-3 break-all"
+					className="font-medium text-sm hover:text-[#539bf5] leading-6 line-clamp-3 break-all text-left"
 					href={titleUrl}
 				>
 					{title}
