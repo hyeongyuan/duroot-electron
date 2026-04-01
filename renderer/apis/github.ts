@@ -1,4 +1,8 @@
-import axios, { type AxiosError } from "axios";
+import axios, {
+	type AxiosError,
+	type AxiosRequestConfig,
+	type AxiosResponse,
+} from "axios";
 import type {
 	GithubPull,
 	GithubReview,
@@ -15,34 +19,63 @@ const instance = axios.create({
 	},
 });
 
-export const fetchUser = async (token: string) => {
-	const { data } = await instance.get<GithubUser>("/user", {
+interface GithubRequestConfig<D = unknown> extends AxiosRequestConfig<D> {
+	ignoreForbiddenError?: boolean;
+}
+
+instance.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		if (
+			isForbiddenError(error) &&
+			(error.config as GithubRequestConfig | undefined)?.ignoreForbiddenError
+		) {
+			return {
+				...(error.response as AxiosResponse),
+				data: undefined,
+				config: error.config,
+			};
+		}
+
+		return Promise.reject(error);
+	},
+);
+
+const githubGet = async <T>(
+	url: string,
+	token: string,
+	config?: GithubRequestConfig,
+) => {
+	const { data } = await instance.get<T | undefined>(url, {
+		...config,
 		headers: {
 			Authorization: `Bearer ${token}`,
+			...config?.headers,
 		},
 	});
+
 	return data;
+};
+
+export const fetchUser = async (token: string) => {
+	const user = await githubGet<GithubUser>("/user", token, {
+		ignoreForbiddenError: false,
+	});
+	return user;
 };
 
 const searchIssues = async (token: string, query: string) => {
-	const { data } = await instance.get<GithubSearch>(
+	return githubGet<GithubSearch>(
 		`/search/issues?q=${encodeURIComponent(query)}`,
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		},
+		token,
+		{ ignoreForbiddenError: true },
 	);
-	return data;
 };
 
 const fetchPullRequest = async (token: string, pullRequestUrl: string) => {
-	const { data } = await instance.get<GithubPull>(pullRequestUrl, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
+	return githubGet<GithubPull>(pullRequestUrl, token, {
+		ignoreForbiddenError: true,
 	});
-	return data;
 };
 
 export const fetchPullRequestChanges = async (
@@ -50,6 +83,9 @@ export const fetchPullRequestChanges = async (
 	pullRequestUrl: string,
 ) => {
 	const pullRequest = await fetchPullRequest(token, pullRequestUrl);
+	if (!pullRequest) {
+		return undefined;
+	}
 
 	return {
 		additions: pullRequest.additions,
@@ -107,15 +143,9 @@ const fetchPullRequestReviews = async (
 	token: string,
 	pullRequestUrl: string,
 ) => {
-	const { data } = await instance.get<GithubReview[]>(
-		`${pullRequestUrl}/reviews`,
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		},
-	);
-	return data;
+	return githubGet<GithubReview[]>(`${pullRequestUrl}/reviews`, token, {
+		ignoreForbiddenError: true,
+	});
 };
 
 export const fetchReviewedPullRequests = async (
@@ -140,6 +170,9 @@ export const fetchReviewCount = async (
 		fetchPullRequest(token, pullRequestUrl),
 		fetchPullRequestReviews(token, pullRequestUrl),
 	]);
+	if (!pullRequest || !reviews) {
+		return undefined;
+	}
 
 	return getReviewCount(pullRequest, reviews, login);
 };
@@ -153,6 +186,9 @@ export const fetchMyPullRequestMeta = async (
 		fetchPullRequest(token, pullRequestUrl),
 		fetchPullRequestReviews(token, pullRequestUrl),
 	]);
+	if (!pullRequest || !reviews) {
+		return undefined;
+	}
 
 	return {
 		reviewCount: getReviewCount(pullRequest, reviews, login),
@@ -166,6 +202,10 @@ export const fetchMyPullRequestMeta = async (
 
 export const isAuthorizedError = (error: unknown): error is AxiosError => {
 	return axios.isAxiosError(error) && error.response?.status === 401;
+};
+
+export const isForbiddenError = (error: unknown): error is AxiosError => {
+	return axios.isAxiosError(error) && error.response?.status === 403;
 };
 
 export const isNetworkError = (error: unknown): error is AxiosError => {

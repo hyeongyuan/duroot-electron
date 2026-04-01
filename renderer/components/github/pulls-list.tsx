@@ -2,7 +2,7 @@ import {
 	ArrowPathIcon,
 	ArrowTopRightOnSquareIcon,
 } from "@heroicons/react/24/solid";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -30,6 +30,7 @@ import { TabKey } from "./pulls-tabs";
 
 const WINDOW_HEIGHT = 500;
 const HEADER_SECTION_HEIGHT = HEADER_HEIGHT + TABS_HEIGHT;
+type PullsQueryData = Awaited<ReturnType<typeof queryPullsByTab>>;
 
 const isPullVisible = (pull: GithubIssueItem, visibleLabels: string[]) => {
 	if (visibleLabels.length === 0) {
@@ -45,7 +46,12 @@ export function PullsList() {
 		TabKey.MY_PULL_REQUESTS) as TabKey;
 	const { data } = useAuthStore();
 	const { get, set } = usePullsVisibleLabelsStore();
+	const queryClient = useQueryClient();
 	const visibleLabels = get(tabQuery);
+	const getCachedPulls = (login?: string) =>
+		queryClient.getQueryData<PullsQueryData>(
+			buildPullsQueryKey(tabQuery, login),
+		);
 	const getAuthData = () => {
 		if (!data) {
 			throw new Error("Auth data is required");
@@ -61,9 +67,15 @@ export function PullsList() {
 		refetch,
 	} = useQuery({
 		queryKey: buildPullsQueryKey(tabQuery, data?.user.login),
-		queryFn: () => {
+		queryFn: async () => {
 			const authData = getAuthData();
-			return queryPullsByTab(tabQuery, authData.token, authData.user.login);
+			return (
+				(await queryPullsByTab(
+					tabQuery,
+					authData.token,
+					authData.user.login,
+				)) ?? getCachedPulls(authData.user.login)
+			);
 		},
 		enabled: !!data,
 	});

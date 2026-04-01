@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
-import { isAuthorizedError } from "../apis/github";
+import { isAuthorizedError, isForbiddenError } from "../apis/github";
 
 export const QueryProvider = ({ children }: { children: React.ReactNode }) => {
 	const [queryClient] = useState(
@@ -9,7 +9,7 @@ export const QueryProvider = ({ children }: { children: React.ReactNode }) => {
 				defaultOptions: {
 					queries: {
 						retry(failureCount, error) {
-							if (isAuthorizedError(error)) {
+							if (isAuthorizedError(error) || isForbiddenError(error)) {
 								return false;
 							}
 							return failureCount < 3;

@@ -10,6 +10,8 @@ import {
 import { ipcHandler } from "../../utils/ipc";
 import { type Tab, Tabs } from "../common/tabs";
 
+type PullsQueryData = Awaited<ReturnType<typeof queryPullsByTab>>;
+
 export enum TabKey {
 	MY_PULL_REQUESTS = "myPullRequests",
 	REQUESTED_PULL_REQUESTS = "requestedPullRequests",
@@ -24,6 +26,10 @@ export function PullsTabs() {
 	const { data } = useAuthStore();
 	const { get } = usePullsVisibleLabelsStore();
 	const queryClient = useQueryClient();
+	const getCachedPulls = (targetTab: TabKey, login?: string) =>
+		queryClient.getQueryData<PullsQueryData>(
+			buildPullsQueryKey(targetTab, login),
+		);
 	const getAuthData = () => {
 		if (!data) {
 			throw new Error("Auth data is required");
@@ -33,9 +39,15 @@ export function PullsTabs() {
 
 	const { data: activePulls } = useQuery({
 		queryKey: buildPullsQueryKey(tabQuery, data?.user.login),
-		queryFn: () => {
+		queryFn: async () => {
 			const authData = getAuthData();
-			return queryPullsByTab(tabQuery, authData.token, authData.user.login);
+			return (
+				(await queryPullsByTab(
+					tabQuery,
+					authData.token,
+					authData.user.login,
+				)) ?? getCachedPulls(tabQuery, authData.user.login)
+			);
 		},
 		enabled: !!data,
 	});
@@ -45,9 +57,7 @@ export function PullsTabs() {
 			return activePulls;
 		}
 
-		return queryClient.getQueryData<
-			Awaited<ReturnType<typeof queryPullsByTab>>
-		>(buildPullsQueryKey(targetTab, data?.user.login));
+		return getCachedPulls(targetTab, data?.user.login);
 	};
 
 	const tabs: Tab[] = [
