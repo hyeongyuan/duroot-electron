@@ -15,7 +15,7 @@ export type AuthViewState = "loading" | "network_error";
 
 export const recoverStoredAuthSession =
 	async (): Promise<AuthRecoveryResult> => {
-		const token = await ipcHandler.getStorage("auth.token");
+		const token = await ipcHandler.getStorage<string>("auth.token");
 
 		if (!token) {
 			return { status: "missing_token" };

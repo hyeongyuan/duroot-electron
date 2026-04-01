@@ -8,7 +8,7 @@ export const useStorage = <T>(
 	const [value, setValue] = useState<T>(initialValue ?? null);
 
 	useEffect(() => {
-		ipcHandler.getStorage(key).then((storedValue) => {
+		ipcHandler.getStorage<T>(key).then((storedValue) => {
 			if (storedValue === undefined) {
 				return;
 			}
@@ -18,7 +18,7 @@ export const useStorage = <T>(
 
 	const updateValue = async (newValue: T) => {
 		await ipcHandler.setStorage(key, newValue);
-		const storedValue = await ipcHandler.getStorage(key);
+		const storedValue = await ipcHandler.getStorage<T>(key);
 
 		setValue(storedValue);
 	};

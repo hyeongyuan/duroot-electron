@@ -1,4 +1,4 @@
-import { AuthNetworkError } from "@components/auth-network-error";
+import { AuthNetworkError } from "../components/auth-network-error";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useAuthStore } from "../stores/auth";

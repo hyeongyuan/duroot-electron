@@ -72,7 +72,6 @@ export function PullsItem({
 				<Anchor
 					className="text-[#768390] text-xs leading-5 line-clamp-1 break-all hover:underline hover:underline-offset-1 pr-1"
 					href={subtitleUrl}
-					target="_blank"
 				>
 					{subtitle}
 				</Anchor>
@@ -81,7 +80,6 @@ export function PullsItem({
 				<Anchor
 					className="font-medium text-sm hover:text-[#539bf5] leading-6 line-clamp-3 break-all"
 					href={titleUrl}
-					target="_blank"
 				>
 					{title}
 				</Anchor>

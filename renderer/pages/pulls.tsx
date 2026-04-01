@@ -1,6 +1,6 @@
-import { PullsList } from "@components/github/pulls-list";
-import { PullsTabs } from "@components/github/pulls-tabs";
-import { Header } from "@components/header";
+import { PullsList } from "../components/github/pulls-list";
+import { PullsTabs } from "../components/github/pulls-tabs";
+import { Header } from "../components/header";
 import { withAuth } from "../hocs/with-auth";
 
 function PullsPage() {

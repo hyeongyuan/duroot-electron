@@ -1,4 +1,4 @@
-import { HEADER_HEIGHT } from "@components/header";
+import { HEADER_HEIGHT } from "../components/header";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../stores/auth";

@@ -1,5 +1,5 @@
-import { Anchor } from "@components/common/anchor";
-import { Input } from "@components/input";
+import { Anchor } from "../components/common/anchor";
+import { Input } from "../components/input";
 import { AxiosError } from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

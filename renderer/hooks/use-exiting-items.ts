@@ -67,9 +67,9 @@ export const useExitingItems = <T>({
 				isExiting: false,
 			}));
 
-			for (const [index, entry] of prev.entries()) {
+			prev.forEach((entry, index) => {
 				if (incomingMap.has(entry.key) || entry.isExiting) {
-					continue;
+					return;
 				}
 
 				const exitingEntry = { ...entry, isExiting: true };
@@ -81,7 +81,7 @@ export const useExitingItems = <T>({
 					.filter((prevEntry) => !incomingMap.has(prevEntry.key)).length;
 
 				next.splice(earlierVisibleCount + earlierExitingCount, 0, exitingEntry);
-			}
+			});
 
 			for (const entry of prev) {
 				if (

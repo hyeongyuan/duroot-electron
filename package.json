@@ -9,8 +9,9 @@
 		"dev": "nextron",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
+		"type-check": "tsc --noEmit",
 		"build": "nextron build",
-		"build:check": "npm run lint && nextron build",
+		"build:check": "npm run lint && npm run type-check && nextron build",
 		"postinstall": "electron-builder install-app-deps"
 	},
 	"dependencies": {
