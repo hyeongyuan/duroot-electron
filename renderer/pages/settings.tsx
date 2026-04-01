@@ -1,6 +1,6 @@
-import { HEADER_HEIGHT } from "../components/header";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { HEADER_HEIGHT } from "../components/header";
 import { useAuthStore } from "../stores/auth";
 import { clearAuthSession } from "../utils/auth";
 import { ipcHandler } from "../utils/ipc";

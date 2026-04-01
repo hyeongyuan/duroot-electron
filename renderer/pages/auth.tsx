@@ -1,9 +1,9 @@
-import { Anchor } from "../components/common/anchor";
-import { Input } from "../components/input";
 import { AxiosError } from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Anchor } from "../components/common/anchor";
+import { Input } from "../components/input";
 
 import { fetchUser } from "../apis/github";
 import { ipcHandler } from "../utils/ipc";
